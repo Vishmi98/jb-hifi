@@ -8,6 +8,7 @@ import ProductSection from '@/modules/homePage/ui/ProductSection';
 import BrandPartners from '@/modules/homePage/ui/BrandPartners';
 import WhatsTrendingSection from '@/modules/homePage/ui/WhatsTrendingSection';
 import WhatsHotSection from '@/modules/homePage/ui/WhatsHotSection';
+import AskForJbDealBanner from '@/modules/homePage/ui/AskForJbDealBanner';
 
 export default function HomePage() {
   return (
@@ -16,8 +17,7 @@ export default function HomePage() {
       <CategoryCircles />
       <WhatsTrendingSection />
       <WhatsHotSection />
-
-    
+      <AskForJbDealBanner />
     </div>
   );
 }
