@@ -69,52 +69,47 @@ body {
 }
 
 .sub-titles {
-  font-family: 'Permanent Marker', cursive;
+  /* font-family: 'Permanent Marker', cursive; */
   line-height: 1.05;
   text-transform: uppercase;
   margin: 0 0 8px 0;
-  text-shadow: 1.5px 1.5px 0px #000;
   font-weight: bolder;
 }
 
 .news {
-  font-family: 'Permanent Marker', cursive;
+  /* font-family: 'Permanent Marker', cursive; */
   font-size: 1.2rem;
   line-height: 1.05;
   text-transform: uppercase;
   margin: 0 0 8px 0;
   color: #fff;
-  text-shadow: 1px 1px 0px #fff;
   font-weight: bolder;
 }
 
 .tech-title {
-  font-family: 'Permanent Marker', cursive;
+  /* font-family: 'Permanent Marker', cursive; */
   font-size: 1.5rem;
   line-height: 1.05;
   text-transform: uppercase;
   margin: 0 0 8px 0;
   color: #fff;
-  text-shadow: 1px 1px 0px #fff;
   font-weight: bolder;
 }
 
 .yellow-title {
-  font-family: 'Permanent Marker', cursive;
+  /* font-family: 'Permanent Marker', cursive; */
   font-size: 1.5rem;
   line-height: 1.05;
   text-transform: uppercase;
   margin: 0 0 8px 0;
   color: var(--color-jb-yellow);
-  text-shadow: 1px 1px 0px #ffee00;
   font-weight: bolder;
 }
 
 .footer-titles {
-  font-family: 'Permanent Marker', cursive;
+  /* font-family: 'Permanent Marker', cursive; */
   line-height: 1.05;
   text-transform: uppercase;
   margin: 0 0 8px 0;
-  text-shadow: 1px 1px 0px #000;
   font-weight: bolder;
 }
