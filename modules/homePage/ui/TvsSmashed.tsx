@@ -6,11 +6,10 @@ import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
 
 import ProductCard from './ProductCard';
 
-import { HOT_TABS, PRODUCTS } from '@/constants/data';
+import { TVS_PRODUCTS } from '@/constants/data';
 
 
-export default function WhatsHotSection() {
-    const [activeTab, setActiveTab] = useState('Hottest Deals');
+export default function TvsSmashed() {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -36,28 +35,11 @@ export default function WhatsHotSection() {
             <div className="mx-auto w-[95%] md:w-[90%]">
                 {/* Header */}
                 <h2 className="sub-titles text-xl md:text-3xl">
-                    WHAT&apos;S HOT
+                    TVs Smashed!
                 </h2>
 
-                {/* Tab Navigation Bar */}
-                <div className="border-b-2 border-black flex overflow-x-auto scrollbar-none gap-10 pb-2 my-4">
-                    {HOT_TABS.map((tab) => (
-                        <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab)}
-                            className={`whitespace-nowrap font-bold text-sm sm:text-base pb-2 relative transition-colors ${activeTab === tab ? 'text-black' : 'text-zinc-600 hover:text-black'
-                                }`}
-                        >
-                            {tab}
-                            {activeTab === tab && (
-                                <div className="absolute bottom-[-8px] z-20 left-0 right-0 h-[5px] bg-jb-yellow" />
-                            )}
-                        </button>
-                    ))}
-                </div>
-
                 {/* Top Right "View all" Link */}
-                <div className="flex justify-end mb-4">
+                <div className="flex justify-end my-4">
                     <Link
                         href="#"
                         className="flex items-center gap-1 font-extrabold text-sm text-black hover:underline"
@@ -73,7 +55,7 @@ export default function WhatsHotSection() {
                     className="flex gap-4 overflow-x-auto scrollbar-none scroll-smooth pb-4"
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
-                    {PRODUCTS.map((prod) => (
+                    {TVS_PRODUCTS.map((prod) => (
                         <ProductCard
                             key={prod.id}
                             prod={prod}

@@ -1,14 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-jb-yellow: #ffd200;
+  --color-jb-yellow: #ffec0f;
   --color-jb-charcoal: #111111;
-  --color-jb-red: #e11b22;
-  --color-jb-blue: #0057b8;
+  --color-jb-red: #e02020;
+  --color-jb-blue: #0099ff;
   --color-jb-dark: #000000;
-  
+  --color-jb-purple: #59168b;
+  --color-jb-green: #028702;
+
   --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
+  --font-sans: var(--font-roboto), Arial, Helvetica, sans-serif;
 }
 
 :root {
@@ -20,7 +23,7 @@ html,
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans);
+  font-family: var(--font-roboto), Arial, Helvetica, sans-serif;
   overflow-x: hidden;
   height: 100%;
 }
@@ -52,4 +55,66 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #6b7280;
+}
+
+.logo {
+  font-family: "JB Crazy Font", sans-serif;
+  font-weight: 900;
+}
+
+.jb-tagline {
+  font-family: "Roboto Condensed", sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.sub-titles {
+  font-family: 'Permanent Marker', cursive;
+  line-height: 1.05;
+  text-transform: uppercase;
+  margin: 0 0 8px 0;
+  text-shadow: 1.5px 1.5px 0px #000;
+  font-weight: bolder;
+}
+
+.news {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 1.2rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+  margin: 0 0 8px 0;
+  color: #fff;
+  text-shadow: 1px 1px 0px #fff;
+  font-weight: bolder;
+}
+
+.tech-title {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 1.5rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+  margin: 0 0 8px 0;
+  color: #fff;
+  text-shadow: 1px 1px 0px #fff;
+  font-weight: bolder;
+}
+
+.yellow-title {
+  font-family: 'Permanent Marker', cursive;
+  font-size: 1.5rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+  margin: 0 0 8px 0;
+  color: var(--color-jb-yellow);
+  text-shadow: 1px 1px 0px #ffee00;
+  font-weight: bolder;
+}
+
+.footer-titles {
+  font-family: 'Permanent Marker', cursive;
+  line-height: 1.05;
+  text-transform: uppercase;
+  margin: 0 0 8px 0;
+  text-shadow: 1px 1px 0px #000;
+  font-weight: bolder;
 }

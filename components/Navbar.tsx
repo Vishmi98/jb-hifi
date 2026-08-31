@@ -69,110 +69,111 @@ export default function Navbar() {
   };
 
   return (
-    <header className="w-full bg-[#ffec0f] text-black relative z-50 select-none">
-      {/* ================= MAIN HEADER ROW ================= */}
-      <div className="mx-auto w-[95%] md:w-[90%]">
-        <div className="h-[70px] flex items-center justify-between gap-6 lg:gap-10 w-full">
-          {/* Mobile Menu Toggle */}
-          <button
-            type="button"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden shrink-0 flex flex-col items-center text-xs font-semibold p-1 hover:bg-black/10 transition"
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? (
-              <X size={26} strokeWidth={2.5} />
-            ) : (
-              <Menu size={26} strokeWidth={2.5} />
-            )}
-            <span>Menu</span>
-          </button>
+    <>
+      <header className="w-full bg-jb-yellow text-black relative z-50 select-none">
+        {/* ================= MAIN HEADER ROW ================= */}
+        <div className="mx-auto w-[95%] md:w-[90%]">
+          <div className="h-[70px] flex items-center justify-between gap-6 lg:gap-10 w-full">
+            {/* Mobile Menu Toggle */}
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="lg:hidden shrink-0 flex flex-col items-center text-xs font-semibold p-1 hover:bg-black/10 transition"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? (
+                <X size={26} strokeWidth={2.5} />
+              ) : (
+                <Menu size={26} strokeWidth={2.5} />
+              )}
+              <span>Menu</span>
+            </button>
 
-          {/* Logo */}
-          <Link
-            href="/"
-            className="shrink-0 flex flex-col items-center justify-center"
-          >
-            <div className="ticket-font font-black text-[28px] sm:text-[34px] leading-[0.8] tracking-[-0.06em] whitespace-nowrap skew-x-[-5deg]">
-              JB HI-FI
+            {/* Logo */}
+            <Link
+              href="/"
+              className="shrink-0 flex flex-col items-center justify-center"
+            >
+              <div className="logo font-black text-[28px] sm:text-[34px] leading-[0.8] tracking-[-0.06em] whitespace-nowrap skew-x-[-5deg]">
+                JB HI-FI
+              </div>
+              <span className="ticket-font mt-1 text-[12px] sm:text-[14px] font-medium leading-none tracking-[-0.02em] whitespace-nowrap skew-x-[-5deg]">
+                ALWAYS CHEAP PRICES
+              </span>
+            </Link>
+
+            {/* Desktop Search Bar */}
+            <div className="flex-1 max-w-lg hidden sm:block">
+              <div className="relative">
+                <Search
+                  size={18}
+                  strokeWidth={1.7}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-[#686868] pointer-events-none"
+                />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search products, brands, and more..."
+                  className="w-full h-[42px] bg-white rounded-sm pl-11 pr-5 text-sm text-black placeholder:text-[#666] outline-none focus:ring-2 focus:ring-black"
+                />
+              </div>
             </div>
-            <span className="ticket-font mt-1 text-[12px] sm:text-[14px] font-medium leading-none tracking-[-0.02em] whitespace-nowrap skew-x-[-5deg]">
-              ALWAYS CHEAP PRICES
-            </span>
-          </Link>
 
-          {/* Desktop Search Bar */}
-          <div className="flex-1 max-w-lg hidden sm:block">
+            {/* Desktop Right Utilities */}
+            <div className="ml-auto flex items-center justify-end gap-3 md:gap-6">
+              <Link
+                href="#"
+                className="hidden md:flex flex-col items-center justify-center min-w-[50px] group"
+              >
+                <Crosshair size={22} strokeWidth={1.8} />
+                <span className="text-xs font-medium leading-tight">Track order</span>
+              </Link>
+
+              <Link
+                href="#"
+                className="hidden md:flex flex-col items-center justify-center min-w-[50px] group"
+              >
+                <Building2 size={22} strokeWidth={1.8} />
+                <span className="text-xs font-medium leading-tight">Stores</span>
+              </Link>
+
+              <Link
+                href="#"
+                className="flex flex-col items-center justify-center min-w-[50px] group"
+              >
+                <User size={22} strokeWidth={1.8} />
+                <span className="text-xs font-medium leading-tight">Log in</span>
+              </Link>
+
+              <Link
+                href="#"
+                className="flex flex-col items-center justify-center min-w-[50px] group"
+              >
+                <ShoppingCart size={22} strokeWidth={1.8} />
+                <span className="text-xs font-medium leading-tight">Cart</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Mobile Search Input */}
+          <div className="pb-3 sm:hidden">
             <div className="relative">
               <Search
                 size={18}
-                strokeWidth={1.7}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-[#686868] pointer-events-none"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-[#686868]"
               />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search products, brands, and more..."
-                className="w-full h-[42px] bg-white rounded-sm pl-11 pr-5 text-sm text-black placeholder:text-[#666] outline-none focus:ring-2 focus:ring-black"
+                className="w-full h-[40px] bg-white rounded-sm pl-11 pr-4 text-sm outline-none placeholder:text-[#666]"
               />
             </div>
           </div>
-
-          {/* Desktop Right Utilities */}
-          <div className="ml-auto flex items-center justify-end gap-3 md:gap-6">
-            <Link
-              href="#"
-              className="hidden md:flex flex-col items-center justify-center min-w-[50px] group"
-            >
-              <Crosshair size={22} strokeWidth={1.8} />
-              <span className="text-xs font-medium leading-tight">Track order</span>
-            </Link>
-
-            <Link
-              href="#"
-              className="hidden md:flex flex-col items-center justify-center min-w-[50px] group"
-            >
-              <Building2 size={22} strokeWidth={1.8} />
-              <span className="text-xs font-medium leading-tight">Stores</span>
-            </Link>
-
-            <Link
-              href="#"
-              className="flex flex-col items-center justify-center min-w-[50px] group"
-            >
-              <User size={22} strokeWidth={1.8} />
-              <span className="text-xs font-medium leading-tight">Log in</span>
-            </Link>
-
-            <Link
-              href="#"
-              className="flex flex-col items-center justify-center min-w-[50px] group"
-            >
-              <ShoppingCart size={22} strokeWidth={1.8} />
-              <span className="text-xs font-medium leading-tight">Cart</span>
-            </Link>
-          </div>
         </div>
-
-        {/* Mobile Search Input */}
-        <div className="pb-3 sm:hidden">
-          <div className="relative">
-            <Search
-              size={18}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-[#686868]"
-            />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search products, brands, and more..."
-              className="w-full h-[40px] bg-white rounded-sm pl-11 pr-4 text-sm outline-none placeholder:text-[#666]"
-            />
-          </div>
-        </div>
-      </div>
-
+      </header>
       {/* ================= DESKTOP CATEGORY BAR ================= */}
       <div className="hidden lg:block bg-black text-white relative">
         <div className="mx-auto w-[95%]">
@@ -186,10 +187,9 @@ export default function Navbar() {
                     onClick={() => item.hasDropdown && toggleDropdown(item.name)}
                     className={`
                       px-8 py-2 text-base font-bold whitespace-nowrap transition-colors flex items-center gap-5
-                      ${
-                        isOpen
-                          ? 'bg-[#ffec0f] text-black'
-                          : 'text-white hover:bg-zinc-800'
+                      ${isOpen
+                        ? 'bg-jb-yellow text-black'
+                        : 'text-white hover:bg-zinc-800'
                       }
                     `}
                   >
@@ -279,6 +279,6 @@ export default function Navbar() {
           </nav>
         </div>
       )}
-    </header>
+    </>
   );
 }

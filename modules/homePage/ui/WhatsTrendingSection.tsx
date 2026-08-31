@@ -38,15 +38,15 @@ export default function WhatsTrendingSection() {
         <section className="w-full bg-white py-8 select-none">
             <div className="mx-auto w-[95%] md:w-[90%]">
                 {/* Section Header */}
-                <h2 className="text-3xl md:text-4xl font-black text-black tracking-tight mb-4 uppercase">
-                    WHAT'S TRENDING
+                <h2 className="sub-titles text-xl md:text-3xl">
+                    WHAT&apos;S TRENDING
                 </h2>
 
                 {/* Scrollable Cards Grid */}
                 <div
                     ref={scrollRef}
                     onScroll={handleScroll}
-                    className="flex gap-4 overflow-x-auto scrollbar-none scroll-smooth pb-2"
+                    className="flex gap-4 overflow-x-auto scrollbar-none scroll-smooth pb-2 mt-4"
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                     {TRENDING_CARDS.map((card) => (
@@ -78,7 +78,7 @@ export default function WhatsTrendingSection() {
                     {/* Continuous Progress Bar Track */}
                     <div className="relative w-48 sm:w-64 h-1.5 bg-gray-300 rounded-full overflow-hidden">
                         <div
-                            className="absolute top-0 left-0 h-full bg-[#ffec0f] transition-all duration-150"
+                            className="absolute top-0 left-0 h-full bg-jb-yellow transition-all duration-150"
                             style={{
                                 width: '35%',
                                 transform: `translateX(${scrollProgress * 1.85}%)`,

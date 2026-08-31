@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { HERO_SLIDES } from '@/constants/data';
+
 
 export default function HeroCarousel() {
   const [current, setCurrent] = useState(0);
@@ -25,9 +25,9 @@ export default function HeroCarousel() {
   };
 
   return (
-    <div className="bg-jb-yellow py-4">
+    <>
       {/* Outer wrapper to contain carousel and yellow bottom navigation bar */}
-      <div className="w-full md:w-[90%] mx-auto">
+      <div className="w-full">
         {/* Main Banner Box */}
         <div className="relative w-full h-auto overflow-hidden bg-black select-none border-2 border-black">
           {/* Slides Container */}
@@ -54,7 +54,7 @@ export default function HeroCarousel() {
         </div>
 
         {/* ================= BOTTOM CONTROL BAR ================= */}
-        <div className="flex items-center justify-center gap-3 pt-3 bg-jb-yellow">
+        <div className="flex items-center justify-center gap-3 pt-3">
           {/* Previous Button */}
           <button
             type="button"
@@ -74,8 +74,8 @@ export default function HeroCarousel() {
                 onClick={() => setCurrent(index)}
                 aria-label={`Go to slide ${index + 1}`}
                 className={`h-1.5 rounded-full transition-all duration-300 ${current === index
-                    ? 'w-12 bg-black'
-                    : 'w-12 bg-black/20 hover:bg-black/40'
+                  ? 'w-12 bg-black'
+                  : 'w-12 bg-black/20 hover:bg-black/40'
                   }`}
               />
             ))}
@@ -92,6 +92,6 @@ export default function HeroCarousel() {
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 }

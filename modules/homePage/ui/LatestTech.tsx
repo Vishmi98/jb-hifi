@@ -6,11 +6,10 @@ import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react';
 
 import ProductCard from './ProductCard';
 
-import { HOT_TABS, PRODUCTS } from '@/constants/data';
+import { LATEST_TECH_PRODUCTS } from '@/constants/data';
 
 
-export default function WhatsHotSection() {
-    const [activeTab, setActiveTab] = useState('Hottest Deals');
+export default function LatestTech() {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -32,35 +31,18 @@ export default function WhatsHotSection() {
     };
 
     return (
-        <section className="w-full bg-white py-8 select-none">
+        <section className="w-full bg-jb-blue py-8 select-none">
             <div className="mx-auto w-[95%] md:w-[90%]">
                 {/* Header */}
-                <h2 className="sub-titles text-xl md:text-3xl">
-                    WHAT&apos;S HOT
+                <h2 className="tech-title">
+                    Check out the latest tech!
                 </h2>
 
-                {/* Tab Navigation Bar */}
-                <div className="border-b-2 border-black flex overflow-x-auto scrollbar-none gap-10 pb-2 my-4">
-                    {HOT_TABS.map((tab) => (
-                        <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab)}
-                            className={`whitespace-nowrap font-bold text-sm sm:text-base pb-2 relative transition-colors ${activeTab === tab ? 'text-black' : 'text-zinc-600 hover:text-black'
-                                }`}
-                        >
-                            {tab}
-                            {activeTab === tab && (
-                                <div className="absolute bottom-[-8px] z-20 left-0 right-0 h-[5px] bg-jb-yellow" />
-                            )}
-                        </button>
-                    ))}
-                </div>
-
                 {/* Top Right "View all" Link */}
-                <div className="flex justify-end mb-4">
+                <div className="flex justify-end my-4">
                     <Link
                         href="#"
-                        className="flex items-center gap-1 font-extrabold text-sm text-black hover:underline"
+                        className="flex items-center gap-1 font-extrabold text-sm text-white hover:underline"
                     >
                         View all <ChevronRight size={18} strokeWidth={3} />
                     </Link>
@@ -73,7 +55,7 @@ export default function WhatsHotSection() {
                     className="flex gap-4 overflow-x-auto scrollbar-none scroll-smooth pb-4"
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
-                    {PRODUCTS.map((prod) => (
+                    {LATEST_TECH_PRODUCTS.map((prod) => (
                         <ProductCard
                             key={prod.id}
                             prod={prod}
@@ -87,7 +69,7 @@ export default function WhatsHotSection() {
                         type="button"
                         onClick={() => scroll('left')}
                         aria-label="Previous items"
-                        className="text-black hover:opacity-75 transition-opacity p-1"
+                        className="text-white hover:opacity-75 transition-opacity p-1"
                     >
                         <ChevronLeft size={28} strokeWidth={3} />
                     </button>
@@ -107,20 +89,10 @@ export default function WhatsHotSection() {
                         type="button"
                         onClick={() => scroll('right')}
                         aria-label="Next items"
-                        className="text-black hover:opacity-75 transition-opacity p-1"
+                        className="text-white hover:opacity-75 transition-opacity p-1"
                     >
                         <ChevronRight size={28} strokeWidth={3} />
                     </button>
-                </div>
-
-                {/* Center Bottom View All Action Button */}
-                <div className="flex justify-center mt-6">
-                    <Link
-                        href="#"
-                        className="bg-black hover:bg-zinc-800 text-white font-extrabold text-sm px-8 py-3 flex items-center gap-2 uppercase transition-colors"
-                    >
-                        <ShoppingBag size={18} /> View all
-                    </Link>
                 </div>
             </div>
         </section>

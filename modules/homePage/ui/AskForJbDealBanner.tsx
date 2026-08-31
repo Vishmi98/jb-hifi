@@ -5,7 +5,7 @@ import { MessageSquare, Phone } from 'lucide-react';
 
 export default function AskForJbDealBanner() {
     return (
-        <section className="w-[95%] md:w-[90%] mx-auto bg-[#ffec0f] border-1 border-black p-4 sm:p-6 md:px-8 select-none my-6">
+        <section className="w-[95%] md:w-[90%] shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] mx-auto bg-jb-yellow border-1 border-black p-4 sm:p-6 md:px-8 select-none my-6">
             <div className="mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
 
                 {/* Left Column: Title & Disclaimer */}
@@ -19,13 +19,13 @@ export default function AskForJbDealBanner() {
                 </div>
 
                 {/* Center Column: Red Stamped Box */}
-                <div className="relative border-4 border-red-600 px-6 sm:px-10 py-4 sm:py-6 text-center my-2 lg:my-0">
-                    <h3 className="whats-font text-3xl sm:text-5xl md:text-5xl text-red-600 uppercase tracking-tight leading-none font-bold">
+                <div className="relative border-4 border-jb-red px-6 sm:px-10 py-4 sm:py-6 text-center my-2 lg:my-0">
+                    <h3 className="whats-font text-3xl sm:text-5xl md:text-5xl text-jb-red uppercase tracking-tight leading-none font-bold">
                         ASK FOR A JB DEAL!
                     </h3>
 
                     {/* Badge overlapping bottom border */}
-                    <div className="absolute text-[#ffec0f] -bottom-3.5 left-1/2 transform -translate-x-1/2 bg-red-600 font-black text-xs sm:text-sm px-3 py-0.5 uppercase tracking-wider">
+                    <div className="absolute text-jb-yellow -bottom-3.5 left-1/2 transform -translate-x-1/2 bg-jb-red font-black text-xs sm:text-sm px-3 py-0.5 uppercase tracking-wider">
                         INSTORE | ONLINE
                     </div>
                 </div>

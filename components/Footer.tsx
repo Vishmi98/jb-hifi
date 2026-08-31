@@ -1,160 +1,166 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { Mail, Send } from 'lucide-react';
+import React from 'react';
+
+import { FOOTER_DATA, PAYMENT_METHODS } from '@/constants/data';
+
+
+// Custom SVG Icons
+const FacebookIcon = () => (
+  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>
+);
+
+const InstagramIcon = () => (
+  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
+);
+
+const TikTokIcon = () => (
+  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+    <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-5.2 1.74 2.89 2.89 0 012.31-4.64c.29 0 .56.04.82.11V9.4a6.33 6.33 0 00-.82-.05A6.34 6.34 0 003.15 15.7a6.34 6.34 0 0010.83 4.47V11.2a8.27 8.27 0 004.85 1.56V9.31a4.82 4.82 0 01-2.91-1.29z" />
+  </svg>
+);
+
+const YoutubeIcon = () => (
+  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
+    <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="white" />
+  </svg>
+);
+
+const XIcon = () => (
+  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
 
 export default function Footer() {
-  const [email, setEmail] = useState('');
-  const [isSubscribed, setIsSubscribed] = useState(false);
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email.trim()) {
-      setIsSubscribed(true);
-      setEmail('');
-      setTimeout(() => setIsSubscribed(false), 4000);
-    }
-  };
-
   return (
-    <footer className="w-full bg-[#111111] text-zinc-300 border-t border-zinc-800">
-      {/* 1. Newsletter Banner */}
-      <div className="bg-jb-yellow text-black py-8 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-3">
-            <Mail size={32} className="shrink-0 text-black stroke-[1.5px]" />
+    <footer className="w-full bg-[#f4f4f4] text-[#333333] pt-12 pb-8 px-4 sm:px-6 lg:px-8 font-sans">
+      <div className="mx-auto w-[95%] md:w-[90%] max-w-[1280px]">
+        {/* Main Footer Body */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-6 pb-12">
+
+          {/* Brand Info & Social Links */}
+          <div className="lg:col-span-3 flex flex-col justify-between">
             <div>
-              <h3 className="text-lg md:text-xl font-black uppercase tracking-tight leading-none ticket-font">Get the best deals first!</h3>
-              <p className="text-xs font-semibold text-black/70 mt-1">Subscribe to the JB Hi-Fi newsletter for hot deals and member-only perks.</p>
+              <div className="logo font-black text-[28px] sm:text-[34px] leading-[0.8] tracking-[-0.06em] whitespace-nowrap skew-x-[-5deg]">
+                JB HI-FI
+              </div>
+              <p className="text-[#555555] text-sm leading-snug mt-3">
+                Australia&apos;s largest home entertainment retailer.
+              </p>
+            </div>
+
+            {/* Social Media Buttons */}
+            <div className="flex items-center gap-2 mt-6 md:mt-0">
+              <a
+                href="#"
+                aria-label="Facebook"
+                className="w-8 h-8 bg-[#e4e4e4] hover:bg-[#d8d8d8] text-black flex items-center justify-center rounded-xs transition-colors"
+              >
+                <FacebookIcon />
+              </a>
+              <a
+                href="#"
+                aria-label="Instagram"
+                className="w-8 h-8 bg-[#e4e4e4] hover:bg-[#d8d8d8] text-black flex items-center justify-center rounded-xs transition-colors"
+              >
+                <InstagramIcon />
+              </a>
+              <a
+                href="#"
+                aria-label="TikTok"
+                className="w-8 h-8 bg-[#e4e4e4] hover:bg-[#d8d8d8] text-black flex items-center justify-center rounded-xs transition-colors"
+              >
+                <TikTokIcon />
+              </a>
+              <a
+                href="#"
+                aria-label="YouTube"
+                className="w-8 h-8 bg-[#e4e4e4] hover:bg-[#d8d8d8] text-black flex items-center justify-center rounded-xs transition-colors"
+              >
+                <YoutubeIcon />
+              </a>
+              <a
+                href="#"
+                aria-label="X"
+                className="w-8 h-8 bg-[#e4e4e4] hover:bg-[#d8d8d8] text-black flex items-center justify-center rounded-xs transition-colors"
+              >
+                <XIcon />
+              </a>
             </div>
           </div>
-          
-          <form onSubmit={handleSubscribe} className="w-full md:w-auto flex items-center max-w-md shrink-0">
-            <div className="relative flex-1 md:w-80">
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-white text-black pl-4 pr-10 py-2.5 rounded-l border-y-2 border-l-2 border-black focus:outline-none text-sm font-semibold"
-              />
+
+          {/* Navigation Links Columns */}
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-8">
+            {FOOTER_DATA.map((col) => (
+              <div key={col.title}>
+                <h3 className="footer-titles md:text-lg">
+                  {col.title}
+                </h3>
+                <ul className="space-y-3 text-[14px] mt-5">
+                  {col.links.map((link) => (
+                    <li key={link.label}>
+                      <a
+                        href={link.href}
+                        className="text-[#444444] hover:text-black hover:underline transition-colors"
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+
+          {/* Payment Methods Badges Grid */}
+          <div className="lg:col-span-2 flex justify-start lg:justify-end">
+            <div className="grid grid-cols-4 md:grid-cols-2 w-full gap-2 md:gap-0">
+              {PAYMENT_METHODS.map((method) => (
+                <div
+                  key={method.name}
+                  className="h-10"
+                >
+                  <img
+                    src={method.image}
+                    alt={method.name}
+                    className="max-h-full max-w-full object-contain"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
             </div>
-            <button
-              type="submit"
-              className="bg-black text-white hover:bg-zinc-900 border-2 border-black px-5 py-2.5 rounded-r font-extrabold uppercase text-xs tracking-wider transition-colors flex items-center gap-1.5"
-            >
-              <span>{isSubscribed ? 'Joined!' : 'Subscribe'}</span>
-              {!isSubscribed && <Send size={12} />}
-            </button>
-          </form>
-        </div>
-      </div>
-
-      {/* 2. Link Columns */}
-      <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 border-b border-zinc-800">
-        <div>
-          <h4 className="text-sm font-black text-white uppercase tracking-wider mb-4 border-b border-zinc-800 pb-2">Shopping With Us</h4>
-          <ul className="flex flex-col gap-2.5 text-xs font-semibold">
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Click & Collect</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Delivery Options</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Gift Cards</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Catalogues</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Brand Index</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Trade-In Programme</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Tax Free Shopping</Link></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="text-sm font-black text-white uppercase tracking-wider mb-4 border-b border-zinc-800 pb-2">Customer Support</h4>
-          <ul className="flex flex-col gap-2.5 text-xs font-semibold">
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Help & Support Centre</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Contact Us</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Order Status & Tracking</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Returns & Refunds</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Warranty & Repair Info</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Recycling & E-Waste</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Product Recalls</Link></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="text-sm font-black text-white uppercase tracking-wider mb-4 border-b border-zinc-800 pb-2">About JB Hi-Fi</h4>
-          <ul className="flex flex-col gap-2.5 text-xs font-semibold">
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">About Us</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Careers at JB</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Corporate & Investor Relations</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Social Responsibility & Charity</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Modern Slavery Statement</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Terms of Use</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">Privacy Policy</Link></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="text-sm font-black text-white uppercase tracking-wider mb-4 border-b border-zinc-800 pb-2">Our Brands & Services</h4>
-          <ul className="flex flex-col gap-2.5 text-xs font-semibold">
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">JB Perks Membership</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">JB Hi-Fi Solutions (Business)</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">JB Hi-Fi Mobile</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">JB Hi-Fi Broadband</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">The Good Guys</Link></li>
-            <li><Link href="#" className="hover:text-jb-yellow hover:underline">BYOD Student Portal</Link></li>
-          </ul>
-        </div>
-      </div>
-
-      {/* 3. Bottom Bar with Payments & Socials */}
-      <div className="max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-zinc-500 font-semibold">
-        <div className="flex flex-col items-center md:items-start gap-2">
-          <span>&copy; {new Date().getFullYear()} JB Hi-Fi. All rights reserved.</span>
-          <div className="flex gap-4 mt-1">
-            <Link href="#" className="hover:underline hover:text-zinc-400">Terms of Sale</Link>
-            <span>&bull;</span>
-            <Link href="#" className="hover:underline hover:text-zinc-400">Privacy Policy</Link>
-            <span>&bull;</span>
-            <Link href="#" className="hover:underline hover:text-zinc-400">Sitemap</Link>
-          </div>
-        </div>
-
-        {/* Socials & Payments */}
-        <div className="flex flex-col items-center md:items-end gap-4">
-          {/* Social Icons */}
-          <div className="flex items-center gap-4 text-zinc-400">
-            <Link href="#" className="hover:text-white transition-colors" title="Facebook">
-              <svg className="w-4.5 h-4.5 fill-current" viewBox="0 0 24 24">
-                <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z" />
-              </svg>
-            </Link>
-            <Link href="#" className="hover:text-white transition-colors" title="Instagram">
-              <svg className="w-4.5 h-4.5 stroke-current fill-none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-              </svg>
-            </Link>
-            <Link href="#" className="hover:text-white transition-colors" title="Twitter/X">
-              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-              </svg>
-            </Link>
-            <Link href="#" className="hover:text-white transition-colors" title="YouTube">
-              <svg className="w-4.5 h-4.5 fill-current" viewBox="0 0 24 24">
-                <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.53 3.545 12 3.545 12 3.545s-7.53 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.017 0 12 0 12s0 3.983.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.858.507 9.388.507 9.388.507s7.53 0 9.388-.507a3.003 3.003 0 0 0 2.11-2.11C24 15.983 24 12 24 12s0-3.983-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-              </svg>
-            </Link>
           </div>
 
-          {/* Payment Badges (simulated via CSS badges) */}
-          <div className="flex flex-wrap items-center gap-1.5 opacity-60">
-            <span className="bg-zinc-800 text-zinc-300 px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider">VISA</span>
-            <span className="bg-zinc-800 text-zinc-300 px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider">MC</span>
-            <span className="bg-zinc-800 text-zinc-300 px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider">PAYPAL</span>
-            <span className="bg-zinc-800 text-zinc-300 px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider">AFTERPAY</span>
-            <span className="bg-zinc-800 text-zinc-300 px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider">ZIP</span>
-            <span className="bg-zinc-800 text-zinc-300 px-1.5 py-0.5 rounded text-[9px] font-bold tracking-wider">APPLE PAY</span>
+        </div>
+
+        {/* Divider */}
+        <div className="w-full h-[1px] bg-gray-300 mb-6" />
+
+        {/* Bottom Legal Section */}
+        <div className="flex flex-col md:flex-row items-center justify-between text-[13px] text-[#555555] gap-4">
+          <div>©2026 JB Hi-Fi All rights reserved</div>
+
+          <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
+            <a href="#" className="hover:text-black hover:underline transition-colors">
+              Consumer guarantees
+            </a>
+            <a href="#" className="hover:text-black hover:underline transition-colors">
+              Privacy policy
+            </a>
+            <a href="#" className="hover:text-black hover:underline transition-colors">
+              Terms of use
+            </a>
+            <a href="#" className="hover:text-black hover:underline transition-colors">
+              Terms of sale
+            </a>
           </div>
         </div>
       </div>
