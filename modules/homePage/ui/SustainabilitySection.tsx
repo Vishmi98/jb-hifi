@@ -62,7 +62,7 @@ export default function SustainabilitySection() {
                         </p>
 
                         <a
-                            href="#read-stack-mag"
+                            href="/latest-mag"
                             className="bg-white w-full md:w-auto text-black font-bold text-sm sm:text-base py-3 px-8 shadow hover:bg-neutral-200 transition-colors inline-block text-center"
                         >
                             Read the STACK mag
