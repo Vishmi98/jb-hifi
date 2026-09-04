@@ -60,10 +60,16 @@ export interface FooterColumn {
 }
 
 export type DesktopNavbarProps = {
-    openNav: () => void
+  openNav: () => void
 }
 
 export type MobileNavbarProps = {
-    showNav: boolean;
-    closeNav: () => void;
+  showNav: boolean;
+  closeNav: () => void;
+}
+
+export interface CartDrawerProps {
+  isOpen: boolean;
+  onClose: () => void;
+  cartItems?: Array<{ id: string; name: string; price: number; quantity: number }>;
 }

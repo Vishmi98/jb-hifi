@@ -1,4 +1,4 @@
-import StackMagazineReader from '@/modules/homePage/ui/StackMagazineReader';
+import StackMagazineReader from '@/modules/magazine/ui/StackMagazineReader';
 
 export default function LatestMagazinePage() {
     return <StackMagazineReader />;

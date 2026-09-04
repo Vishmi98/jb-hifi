@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   Search,
   ShoppingCart,
@@ -25,6 +26,8 @@ import {
   Film,
   Music,
 } from 'lucide-react';
+
+import CartDrawer from './CartDrawer';
 
 const categoryLinks = [
   { name: 'New', href: '#', hasDropdown: false },
@@ -52,8 +55,36 @@ const productSubmenu = [
   { name: 'Music & Vinyl', icon: Music, href: '#' },
 ];
 
+const brandsSubmenu = [
+  'Apple',
+  'Beats',
+  'Bose',
+  'Breville',
+  'DJI',
+  'Dyson',
+  'Eufy',
+  'Fisher & Paykel',
+  'Fitbit',
+  'Garmin',
+  'Google',
+  'Hisense',
+  'HP',
+  'JBL',
+  'Lenovo',
+  'LG',
+  'Logitech',
+  'Nespresso',
+  'Nintendo',
+  'PlayStation',
+  'Samsung',
+  'Sonos',
+  'Sony',
+  'TCL',
+  'Xbox',
+];
+
 const secondaryLinks = [
-  { name: 'Track my order', href: '#', icon: Crosshair },
+  { name: 'Track my order', href: '/track-my-order', icon: Crosshair },
   { name: 'Wish List', href: '#', icon: Heart },
   { name: 'Store Finder', href: '#', icon: MapPin },
   { name: 'Help & Support', href: '#', icon: HelpCircle },
@@ -63,10 +94,37 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Ref attached to the navigation container to detect outside clicks
+  const navRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = (name: string) => {
     setActiveDropdown((prev) => (prev === name ? null : name));
   };
+
+  // Close dropdown on outside click or Escape key press
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setActiveDropdown(null);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setActiveDropdown(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   return (
     <>
@@ -94,10 +152,13 @@ export default function Navbar() {
               href="/"
               className="shrink-0 flex flex-col items-center justify-center"
             >
-              <div className="logo font-black text-[28px] sm:text-[34px] leading-[0.8] tracking-[-0.06em] whitespace-nowrap skew-x-[-5deg]">
-                JB HI-FI
-              </div>
-              <span className="ticket-font mt-1 text-[12px] sm:text-[14px] font-medium leading-none tracking-[-0.02em] whitespace-nowrap skew-x-[-5deg]">
+              <Image
+                src="/logo1.png"
+                alt="logo"
+                width={155}
+                height={155}
+              />
+              <span className="jb-callout-logo text-[12px] sm:text-[14px] font-medium leading-tight">
                 ALWAYS CHEAP PRICES
               </span>
             </Link>
@@ -123,7 +184,7 @@ export default function Navbar() {
             {/* Desktop Right Utilities */}
             <div className="ml-auto flex items-center justify-end gap-3 md:gap-6">
               <Link
-                href="#"
+                href="/track-my-order"
                 className="hidden md:flex flex-col items-center justify-center min-w-[50px] group"
               >
                 <Crosshair size={22} strokeWidth={1.8} />
@@ -146,13 +207,14 @@ export default function Navbar() {
                 <span className="text-xs font-medium leading-tight">Log in</span>
               </Link>
 
-              <Link
-                href="#"
+              <button
+                type="button"
+                onClick={() => setIsCartOpen(true)}
                 className="flex flex-col items-center justify-center min-w-[50px] group"
               >
                 <ShoppingCart size={22} strokeWidth={1.8} />
                 <span className="text-xs font-medium leading-tight">Cart</span>
-              </Link>
+              </button>
             </div>
           </div>
 
@@ -174,8 +236,9 @@ export default function Navbar() {
           </div>
         </div>
       </header>
+
       {/* ================= DESKTOP CATEGORY BAR ================= */}
-      <div className="hidden lg:block bg-black text-white relative">
+      <div ref={navRef} className="hidden lg:block bg-black text-white relative">
         <div className="mx-auto w-[95%]">
           <ul className="flex items-center flex-wrap">
             {categoryLinks.map((item) => {
@@ -196,9 +259,9 @@ export default function Navbar() {
                     {item.name}
                   </button>
 
-                  {/* Desktop Dropdown Popover */}
+                  {/* Products Dropdown */}
                   {isOpen && item.name === 'Products' && (
-                    <div className="absolute top-full left-0 w-[340px] bg-white text-black shadow-2xl rounded-b-md border border-gray-200 z-50 overflow-hidden">
+                    <div className="absolute top-full left-0 w-[340px] bg-white text-black shadow-2xl border border-gray-200 z-50 overflow-hidden">
                       <div className="max-h-[480px] overflow-y-auto py-1 divide-y divide-gray-100">
                         {productSubmenu.map((subItem) => {
                           const IconComp = subItem.icon;
@@ -206,7 +269,8 @@ export default function Navbar() {
                             <Link
                               key={subItem.name}
                               href={subItem.href}
-                              className="flex items-center justify-between px-4 py-3 hover:bg-gray-100 transition group"
+                              onClick={() => setActiveDropdown(null)}
+                              className="flex items-center justify-between px-4 py-3 hover:bg-jb-yellow rounded-sm transition group"
                             >
                               <div className="flex items-center gap-3">
                                 <IconComp
@@ -221,6 +285,44 @@ export default function Navbar() {
                                 size={16}
                                 className="text-gray-400 group-hover:text-black transition"
                               />
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Brands Dropdown */}
+                  {isOpen && item.name === 'Brands' && (
+                    <div className="absolute top-full left-0 w-[340px] bg-white text-black shadow-2xl z-50 py-2 border border-gray-100">
+                      <div className="px-5 pb-3 border-b border-gray-200">
+                        <Link
+                          href="#"
+                          onClick={() => setActiveDropdown(null)}
+                          className="font-bold text-black hover:underline block"
+                        >
+                          All featured brands
+                        </Link>
+                      </div>
+
+                      <div className="max-h-[400px] overflow-y-auto py-2">
+                        {brandsSubmenu.map((brand) => {
+                          // Formats the brand name into a URL slug (e.g., "Fisher & Paykel" -> "fisher-and-paykel")
+                          const brandSlug = brand
+                            .toLowerCase()
+                            .replace(/ & /g, '-and-')
+                            .replace(/[^a-z0-0\s-]/g, '')
+                            .trim()
+                            .replace(/\s+/g, '-');
+
+                          return (
+                            <Link
+                              key={brand}
+                              href={`/${brandSlug}`}
+                              onClick={() => setActiveDropdown(null)}
+                              className="block px-5 py-2.5 text-base font-normal text-black hover:bg-jb-yellow transition-colors rounded-sm"
+                            >
+                              {brand}
                             </Link>
                           );
                         })}
@@ -279,6 +381,8 @@ export default function Navbar() {
           </nav>
         </div>
       )}
+
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>
   );
 }

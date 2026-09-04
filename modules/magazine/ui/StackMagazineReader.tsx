@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
@@ -12,110 +13,8 @@ import {
     Grid,
 } from 'lucide-react';
 
-const PAGES = [
-    {
-        id: 1,
-        title: 'COVER PAGE',
-        bg: 'from-amber-400 to-yellow-500',
-        content: (
-            <div className="relative w-full h-full flex items-center justify-center overflow-hidden bg-[#ffe600]">
-                <img
-                    src="/mg1.jpg"
-                    alt="JB Hi-Fi Deals For Dad Catalog Cover"
-                    className="w-full h-full object-contain drop-shadow-md"
-                />
-            </div>
-        ),
-    },
-    {
-        id: 2,
-        title: 'NEW AT JB!',
-        bg: 'from-slate-100 to-gray-200',
-        content: (
-            <div className="relative w-full h-full flex items-center justify-center overflow-hidden bg-[#ffe600]">
-                <img
-                    src="/mg2.png"
-                    alt="JB Hi-Fi Deals For Dad Catalog Page 2"
-                    className="w-full h-full object-contain drop-shadow-md"
-                />
-            </div>
-        ),
-    },
-    {
-        id: 3,
-        title: 'OURA RING',
-        bg: 'from-stone-100 to-amber-50',
-        content: (
-            <div className="relative w-full h-full flex items-center justify-center overflow-hidden bg-[#ffe600]">
-                <img
-                    src="/mg3.png"
-                    alt="JB Hi-Fi Deals For Dad Catalog Page 3"
-                    className="w-full h-full object-contain drop-shadow-md"
-                />
-            </div>
-        ),
-    },
-    {
-        id: 4,
-        title: 'TECH SPOTLIGHT',
-        bg: 'from-slate-900 to-indigo-950',
-        content: (
-            <div className="relative w-full h-full flex items-center justify-center overflow-hidden bg-[#ffe600]">
-                {/* Base Background Image Layer */}
-                <img
-                    src="/mg4.png"
-                    alt="Catalogue Background Base Layer"
-                    aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-contain pointer-events-none z-0"
-                />
+import { MagPage, PAGES } from './MagPages';
 
-                {/* SVG Vector Text / Details Layer */}
-                <img
-                    src="https://catalogue.jbhifi.com.au/2026/08/24-08-dfd/files/assets/common/page-vectorlayers/0004.svg?uni=848e4263ba0ee3dbe7225a8cb8f5e113"
-                    alt="JB Hi-Fi Deals For Dad Catalog Page Layer"
-                    className="relative w-full h-full object-contain drop-shadow-md z-10"
-                />
-            </div>
-        ),
-    },
-    {
-        id: 5,
-        title: 'BACK COVER',
-        bg: 'from-neutral-950 to-black',
-        content: (
-            <div className="relative w-full h-full flex items-center justify-center overflow-hidden bg-[#ffe600]">
-                {/* Base Background Image Layer */}
-                <img
-                    src="/mg5.png"
-                    alt="Catalogue Background Base Layer"
-                    aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-contain pointer-events-none z-0"
-                />
-
-                {/* SVG Vector Text / Details Layer */}
-                <img
-                    src="https://catalogue.jbhifi.com.au/2026/08/24-08-dfd/files/assets/common/page-vectorlayers/0005.svg?uni=848e4263ba0ee3dbe7225a8cb8f5e113"
-                    alt="JB Hi-Fi Deals For Dad Catalog Page Layer"
-                    className="relative w-full h-full object-contain drop-shadow-md z-10"
-                />
-            </div>
-        ),
-    },
-];
-
-const Page = React.forwardRef<HTMLDivElement, { page: (typeof PAGES)[0] }>(
-    ({ page }, ref) => {
-        return (
-            <div
-                ref={ref}
-                className="w-full h-full shadow-xl overflow-hidden flex flex-col select-none"
-            >
-                {page.content}
-            </div>
-        );
-    }
-);
-Page.displayName = 'Page';
 
 export default function StackMagazineReader() {
     const flipBookRef = useRef<any>(null);
@@ -301,7 +200,7 @@ export default function StackMagazineReader() {
                         ref={flipBookRef}
                     >
                         {PAGES.map((page) => (
-                            <Page key={page.id} page={page} />
+                            <MagPage key={page.id} page={page} />
                         ))}
                     </FlipBook>
                 </div>
