@@ -1,3 +1,6 @@
+import { Method } from "axios";
+import { ReactNode } from "react";
+
 export interface NavItem {
   name: string;
   href: string;
@@ -72,4 +75,63 @@ export interface CartDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   cartItems?: Array<{ id: string; name: string; price: number; quantity: number }>;
+}
+
+export type UserStoreUserType = {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    userType: string;
+    phoneNumber: string;
+}
+
+export type ApiCallOptions = {
+    url: string;
+    method?: Method; // GET, POST, PUT, etc.
+    body?: Record<string, unknown>;
+    params?: Record<string, unknown>;
+    isAuth?: boolean;
+}
+
+export type ProfileLink = {
+    id: string;
+    label: string;
+    icon: ReactNode;
+    href: string;
+}
+
+export type SidebarProps = {
+    isOpen: boolean;
+    setIsOpen: (isOpen: boolean) => void;
+}
+
+export type TableProps = {
+    reload?: boolean;
+    handleReload?: () => void;
+}
+
+export type LoaderProps = {
+    h?: number;
+};
+
+export type ConfirmModalProps = {
+    isOpen: boolean;
+    onClose: () => void;
+    onConfirm: () => void;
+    message: string;
+};
+
+export type AddModalProps = {
+    isOpen: boolean;
+    onClose: () => void;
+    handleReload: () => void;
+}
+
+export interface CropModalProps {
+    imageFile: File;
+    onCropComplete: (file: File) => void;
+    onClose: () => void;
+    cropWidth?: number;
+    cropHeight?: number;
 }

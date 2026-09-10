@@ -82,11 +82,9 @@ export default function TrackMyOrderPage() {
             </div>
 
             {/* Bottom Footer Accent Bar & Icon */}
-            <div className="relative border-b-8 border-jb-yellow bg-transparent">
-                <div className="max-w-7xl mx-auto px-10 md:px-30 flex justify-end">
-                    <div className="relative -mb-[8px] z-10">
-                        <Truck size={70} strokeWidth={2} className="text-black fill-jb-yellow" />
-                    </div>
+            <div className="max-w-7xl mx-auto px-10 md:px-30 flex justify-end">
+                <div className="relative -mb-[8px] z-10">
+                    <Truck size={70} strokeWidth={2} className="text-black fill-jb-yellow" />
                 </div>
             </div>
         </div>

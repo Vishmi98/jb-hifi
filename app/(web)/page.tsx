@@ -1,7 +1,6 @@
 'use client';
 
 import HeroCarousel from '@/modules/homePage/ui/HeroCarousel';
-import CategoryCircles from '@/modules/homePage/ui/CategoryCircles';
 import WhatsTrendingSection from '@/modules/homePage/ui/WhatsTrendingSection';
 import WhatsHotSection from '@/modules/homePage/ui/WhatsHotSection';
 import AskForJbDealBanner from '@/modules/homePage/ui/AskForJbDealBanner';
@@ -12,6 +11,7 @@ import LatestTech from '@/modules/homePage/ui/LatestTech';
 import MoreThanProductsSection from '@/modules/homePage/ui/MoreThanProductsSection';
 import BestBrandsSection from '@/modules/homePage/ui/BestBrandsSection';
 import SustainabilitySection from '@/modules/homePage/ui/SustainabilitySection';
+import CategoryCircles from '@/modules/category/ui/CategoryCircles';
 
 export default function HomePage() {
   return (

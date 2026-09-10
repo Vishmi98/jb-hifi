@@ -11,8 +11,10 @@ import {
 
 import { HeroSlide, PromoTile, FooterColumn } from './types';
 
-import { BrandDataType, ProductDataType, SustainabilityCardProps } from '@/modules/homePage/homePage.types';
+import { ProductDataType, SustainabilityCardProps } from '@/modules/homePage/homePage.types';
 
+
+export const MAX_SIZE_MB = 1.1 * 1024 * 1024;
 
 export const FOOTER_DATA: FooterColumn[] = [
   {
@@ -99,6 +101,64 @@ export const HERO_SLIDES: HeroSlide[] = [
     ctaText: 'COMPUTERS & MORE',
     ctaLink: '#',
     image: '/h3.webp',
+    bgColor: 'bg-yellow-400',
+    textColor: 'text-black',
+    badge: 'PERKS EXCLUSIVE'
+  }
+];
+
+export const HOTTEST_DEALS_HERO_SLIDES: HeroSlide[] = [
+  {
+    id: 'slide-1',
+    title: 'TAX TIME MADNESS',
+    subtitle: 'MASSIVE SAVINGS ON THE BIGGEST TECH BRANDS! LAPTOPS, TVS, PHONES & MORE.',
+    ctaText: 'SHOP THE SALE',
+    ctaLink: '#',
+    image: '/hd1.webp',
+    bgColor: 'bg-red-600',
+    textColor: 'text-white',
+    badge: 'MEGA DEAL'
+  },
+  {
+    id: 'slide-2',
+    title: 'UP TO $500 OFF OLED TVS',
+    subtitle: 'Experience breathtaking picture quality with selected LG, Samsung and Sony OLED TVs.',
+    ctaText: 'VIEW OLED DEALS',
+    ctaLink: '#',
+    image: '/hd2.webp',
+    bgColor: 'bg-zinc-900',
+    textColor: 'text-white',
+    badge: 'TICKET PRICE'
+  },
+  {
+    id: 'slide-3',
+    title: 'BACK TO WORK SPECIALS',
+    subtitle: 'Upgrade your home office with blazing fast laptops, monitors and printers from $299.',
+    ctaText: 'COMPUTERS & MORE',
+    ctaLink: '#',
+    image: '/hd3.webp',
+    bgColor: 'bg-yellow-400',
+    textColor: 'text-black',
+    badge: 'PERKS EXCLUSIVE'
+  },
+    {
+    id: 'slide-4',
+    title: 'UP TO $500 OFF OLED TVS',
+    subtitle: 'Experience breathtaking picture quality with selected LG, Samsung and Sony OLED TVs.',
+    ctaText: 'VIEW OLED DEALS',
+    ctaLink: '#',
+    image: '/hd4.webp',
+    bgColor: 'bg-zinc-900',
+    textColor: 'text-white',
+    badge: 'TICKET PRICE'
+  },
+  {
+    id: 'slide-5',
+    title: 'BACK TO WORK SPECIALS',
+    subtitle: 'Upgrade your home office with blazing fast laptops, monitors and printers from $299.',
+    ctaText: 'COMPUTERS & MORE',
+    ctaLink: '#',
+    image: '/hd3.webp',
     bgColor: 'bg-yellow-400',
     textColor: 'text-black',
     badge: 'PERKS EXCLUSIVE'
@@ -537,20 +597,6 @@ export const SERVICES = [
     icon: GraduationCap,
   },
 ];
-
-export const BRANDS: BrandDataType[] = [
-  { id: 'apple', name: 'Apple', logo: 'https://images.ctfassets.net/xa93kvziwaye/5FVTAmBSaX3q8wF61joQf6/c805197ae42988f2061e94205b8c4e1f/Brand_Card_Apple.png?fm=webp&f=top&fit=fill&q=75&w=384&h=231', href: '#' },
-  { id: 'bose', name: 'Bose', logo: 'https://images.ctfassets.net/xa93kvziwaye/2gXuRCNt87LXk2FTUAJwKf/9789f3d255f2f18efe869bccbd5b9181/Brand_Card_Bose.png?fm=webp&f=top&fit=fill&q=75&w=384&h=231', href: '#' },
-  { id: 'breville', name: 'Breville', logo: 'https://images.ctfassets.net/xa93kvziwaye/6Xi0lVZsks2Lg9IoANqIEK/00c0c9833637bbba704598d551ea91a9/Brand_Card_Breville.png?fm=webp&f=top&fit=fill&q=75&w=384&h=231', href: '#' },
-  { id: 'dji', name: 'DJI', logo: 'https://images.ctfassets.net/xa93kvziwaye/5By6AbrQCStrSE6AHQpTLI/73481a33b0e82b751758f2608b0b4672/Brand_Card_DJI.png?fm=webp&f=top&fit=fill&q=75&w=384&h=231', href: '#' },
-  { id: 'dyson', name: 'Dyson', logo: 'https://images.ctfassets.net/xa93kvziwaye/7smcBtOgYwZs5PKvhdyH6L/2bb7805f85b65f27cfbabe965f10ad25/Brand_Card_Dyson.png?fm=webp&f=top&fit=fill&q=75&w=384&h=231', href: '#' },
-  { id: 'fisher-paykel', name: 'Fisher & Paykel', logo: 'https://images.ctfassets.net/xa93kvziwaye/ZGEPIUuKhIsv8LqNFMmAw/020a371a7131387f2947567de279569d/Brand_Card_Fisher___Paykel.png?fm=webp&f=top&fit=fill&q=75&w=384&h=231', href: '#' },
-  { id: 'hisense', name: 'Hisense', logo: 'https://images.ctfassets.net/xa93kvziwaye/4B29pQIDHCRAWUNu5fOQNg/e6afd7f903e7ec63895c6f96e4a7c601/Hisense_Logo__1_.png?fm=webp&f=top&fit=fill&q=75&w=384&h=231', href: '#' },
-  { id: 'google', name: 'Google', logo: 'https://images.ctfassets.net/xa93kvziwaye/73ePwGkDp4aM1zy6ioqtVL/7456ad41abd89946f077955ac5a9dba8/Brand_Card_Google.png?fm=webp&f=top&fit=fill&q=75&w=384&h=231', href: '#' },
-  { id: 'hp', name: 'HP', logo: 'https://images.ctfassets.net/xa93kvziwaye/7zFrELUQbiCMMT0UicaDhI/972f0e2965fa290dcc87f900bc849157/Brand_Card_HP.png?fm=webp&f=top&fit=fill&q=75&w=384&h=231', href: '#' },
-  { id: 'lg', name: 'LG', logo: 'https://images.ctfassets.net/xa93kvziwaye/54Cqnt3vlBcr1FLUvJNKcw/74b661f528eb60cbfee4a9e594909d9d/Brand_Card_LG.png?fm=webp&f=top&fit=fill&q=75&w=384&h=231', href: '#' },
-];
-
 
 export const SUSTAINABILITY_ITEMS: SustainabilityCardProps[] = [
   {

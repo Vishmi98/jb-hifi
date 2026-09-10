@@ -15,19 +15,20 @@ import {
   MapPin,
   HelpCircle,
   Building2,
-  Laptop,
-  Cpu,
-  Tv,
-  Headphones,
-  Radio,
-  Smartphone,
-  Refrigerator,
-  Gamepad2,
-  Film,
-  Music,
+  Loader2,
+  ChevronLeft,
 } from 'lucide-react';
 
 import CartDrawer from './CartDrawer';
+import { CategoryDataType } from '@/modules/category/category.types';
+import { MainCategoryDataType } from '@/modules/mainCategory/mainCategory.types';
+import { SubCategoryDataType } from '@/modules/subCategory/subCategory.types';
+import { getCategories } from '@/modules/category/category.service';
+import { getMainCategoryByCategory } from '@/modules/mainCategory/mainCategory.service';
+import { getSubCategoryByMainCategory } from '@/modules/subCategory/subCategory.service';
+import { BrandDataType } from '@/modules/brand/brand.types';
+import { getBrands } from '@/modules/brand/brand.service';
+
 
 const categoryLinks = [
   { name: 'New', href: '#', hasDropdown: false },
@@ -40,47 +41,6 @@ const categoryLinks = [
   { name: 'Gift Cards', href: '#', hasDropdown: true },
   { name: 'Join JB Perks', href: '#', hasDropdown: false },
   { name: 'News & Reviews', href: '#', hasDropdown: false },
-];
-
-const productSubmenu = [
-  { name: 'Computers & Tablets', icon: Laptop, href: '#' },
-  { name: 'IT Accessories & PC Parts', icon: Cpu, href: '#' },
-  { name: 'TVs & Home Theatre', icon: Tv, href: '#' },
-  { name: 'Headphones, Speakers & Audio', icon: Headphones, href: '#' },
-  { name: 'Smart Home', icon: Radio, href: '#' },
-  { name: 'Mobile Phones', icon: Smartphone, href: '#' },
-  { name: 'Home Appliances', icon: Refrigerator, href: '#' },
-  { name: 'Gaming', icon: Gamepad2, href: '#' },
-  { name: 'Movies & TV Shows', icon: Film, href: '#' },
-  { name: 'Music & Vinyl', icon: Music, href: '#' },
-];
-
-const brandsSubmenu = [
-  'Apple',
-  'Beats',
-  'Bose',
-  'Breville',
-  'DJI',
-  'Dyson',
-  'Eufy',
-  'Fisher & Paykel',
-  'Fitbit',
-  'Garmin',
-  'Google',
-  'Hisense',
-  'HP',
-  'JBL',
-  'Lenovo',
-  'LG',
-  'Logitech',
-  'Nespresso',
-  'Nintendo',
-  'PlayStation',
-  'Samsung',
-  'Sonos',
-  'Sony',
-  'TCL',
-  'Xbox',
 ];
 
 const secondaryLinks = [
@@ -96,14 +56,152 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // Ref attached to the navigation container to detect outside clicks
+  // Mobile Drill-Down Navigation State
+  // 0 = Main Menu, 1 = Products, 2 = Main Categories, 3 = Sub Categories, 4 = Brands List
+  const [mobileLevel, setMobileLevel] = useState<number>(0);
+
+  // Category & Brand States
+  const [categories, setCategories] = useState<CategoryDataType[]>([]);
+  const [mainCategories, setMainCategories] = useState<MainCategoryDataType[]>([]);
+  const [subCategories, setSubCategories] = useState<SubCategoryDataType[]>([]);
+  const [brands, setBrands] = useState<BrandDataType[]>([]);
+
+  // Selection Tracking
+  const [selectedCategory, setSelectedCategory] = useState<CategoryDataType | null>(null);
+  const [selectedMainCategory, setSelectedMainCategory] = useState<MainCategoryDataType | null>(null);
+
+  // Loading States
+  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [loadingMainCategories, setLoadingMainCategories] = useState(false);
+  const [loadingSubCategories, setLoadingSubCategories] = useState(false);
+  const [loadingBrands, setLoadingBrands] = useState(false);
+
+  // Category Handlers
+  async function handleCategoryClick(category: CategoryDataType) {
+    if (selectedCategory?.id === category.id) {
+      setMobileLevel(2);
+      return;
+    }
+
+    setSelectedCategory(category);
+    setSelectedMainCategory(null);
+    setMainCategories([]);
+    setSubCategories([]);
+
+    setLoadingMainCategories(true);
+    setMobileLevel(2);
+
+    try {
+      const res = await getMainCategoryByCategory({ categoryId: Number(category.id) });
+      if (res.success && res.mainCategories) {
+        setMainCategories(res.mainCategories);
+      }
+    } catch (err) {
+      console.error('Failed to fetch main categories:', err);
+    } finally {
+      setLoadingMainCategories(false);
+    }
+  }
+
+  async function handleMainCategoryClick(mainCat: MainCategoryDataType) {
+    if (selectedMainCategory?.id === mainCat.id) {
+      setMobileLevel(3);
+      return;
+    }
+
+    setSelectedMainCategory(mainCat);
+    setSubCategories([]);
+
+    setLoadingSubCategories(true);
+    setMobileLevel(3);
+
+    try {
+      const res = await getSubCategoryByMainCategory({ mainCategoryId: Number(mainCat.id) });
+      if (res.success && res.subCategories) {
+        setSubCategories(res.subCategories);
+      }
+    } catch (err) {
+      console.error('Failed to fetch sub categories:', err);
+    } finally {
+      setLoadingSubCategories(false);
+    }
+  }
+
+  // Fetch Brands handler
+  const fetchBrandsList = async () => {
+    if (brands.length > 0) return;
+    setLoadingBrands(true);
+    try {
+      const res = await getBrands(1, 100);
+      if (res.success && res.brands) {
+        setBrands(res.brands);
+      }
+    } catch (err) {
+      console.error('Failed to fetch brands:', err);
+    } finally {
+      setLoadingBrands(false);
+    }
+  };
+
+  // Open Brands in Mobile Navigation
+  const handleBrandsMobileClick = () => {
+    setMobileLevel(4);
+    fetchBrandsList();
+  };
+
+  // Mobile Back Navigation Logic
+  const handleMobileBack = () => {
+    if (mobileLevel === 4) {
+      setMobileLevel(0);
+    } else if (mobileLevel === 3) {
+      setMobileLevel(2);
+      setSelectedMainCategory(null);
+      setSubCategories([]);
+    } else if (mobileLevel === 2) {
+      setMobileLevel(1);
+      setSelectedCategory(null);
+      setMainCategories([]);
+    } else if (mobileLevel === 1) {
+      setMobileLevel(0);
+    }
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+    setMobileLevel(0);
+    setSelectedCategory(null);
+    setSelectedMainCategory(null);
+  };
+
+  useEffect(() => {
+    const fetchCategoriesList = async () => {
+      setLoadingCategories(true);
+      try {
+        const res = await getCategories(1, 100);
+        if (res.success && res.categories) {
+          setCategories(res.categories);
+        }
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+
+    fetchCategoriesList();
+  }, []);
+
   const navRef = useRef<HTMLDivElement>(null);
 
   const toggleDropdown = (name: string) => {
-    setActiveDropdown((prev) => (prev === name ? null : name));
+    const nextState = activeDropdown === name ? null : name;
+    setActiveDropdown(nextState);
+
+    if (nextState === 'Brands') {
+      fetchBrandsList();
+    }
   };
 
-  // Close dropdown on outside click or Escape key press
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(event.target as Node)) {
@@ -129,13 +227,17 @@ export default function Navbar() {
   return (
     <>
       <header className="w-full bg-jb-yellow text-black relative z-50 select-none">
-        {/* ================= MAIN HEADER ROW ================= */}
         <div className="mx-auto w-[95%] md:w-[90%]">
           <div className="h-[70px] flex items-center justify-between gap-6 lg:gap-10 w-full">
-            {/* Mobile Menu Toggle */}
             <button
               type="button"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              onClick={() => {
+                if (isMobileMenuOpen) {
+                  closeMobileMenu();
+                } else {
+                  setIsMobileMenuOpen(true);
+                }
+              }}
               className="lg:hidden shrink-0 flex flex-col items-center text-xs font-semibold p-1 hover:bg-black/10 transition"
               aria-label="Toggle menu"
             >
@@ -147,23 +249,13 @@ export default function Navbar() {
               <span>Menu</span>
             </button>
 
-            {/* Logo */}
-            <Link
-              href="/"
-              className="shrink-0 flex flex-col items-center justify-center"
-            >
-              <Image
-                src="/logo1.png"
-                alt="logo"
-                width={155}
-                height={155}
-              />
+            <Link onClick={closeMobileMenu} href="/" className="shrink-0 flex flex-col items-center justify-center">
+              <Image src="/logo1.png" alt="logo" width={155} height={155} />
               <span className="jb-callout-logo text-[12px] sm:text-[14px] font-medium leading-tight">
                 ALWAYS CHEAP PRICES
               </span>
             </Link>
 
-            {/* Desktop Search Bar */}
             <div className="flex-1 max-w-lg hidden sm:block">
               <div className="relative">
                 <Search
@@ -181,28 +273,18 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Desktop Right Utilities */}
             <div className="ml-auto flex items-center justify-end gap-3 md:gap-6">
-              <Link
-                href="/track-my-order"
-                className="hidden md:flex flex-col items-center justify-center min-w-[50px] group"
-              >
+              <Link href="/track-my-order" className="hidden md:flex flex-col items-center justify-center min-w-[50px] group">
                 <Crosshair size={22} strokeWidth={1.8} />
                 <span className="text-xs font-medium leading-tight">Track order</span>
               </Link>
 
-              <Link
-                href="#"
-                className="hidden md:flex flex-col items-center justify-center min-w-[50px] group"
-              >
+              <Link href="#" className="hidden md:flex flex-col items-center justify-center min-w-[50px] group">
                 <Building2 size={22} strokeWidth={1.8} />
                 <span className="text-xs font-medium leading-tight">Stores</span>
               </Link>
 
-              <Link
-                href="#"
-                className="flex flex-col items-center justify-center min-w-[50px] group"
-              >
+              <Link href="#" className="flex flex-col items-center justify-center min-w-[50px] group">
                 <User size={22} strokeWidth={1.8} />
                 <span className="text-xs font-medium leading-tight">Log in</span>
               </Link>
@@ -218,13 +300,9 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Mobile Search Input */}
           <div className="pb-3 sm:hidden">
             <div className="relative">
-              <Search
-                size={18}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-[#686868]"
-              />
+              <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#686868]" />
               <input
                 type="text"
                 value={searchQuery}
@@ -248,51 +326,90 @@ export default function Navbar() {
                   <button
                     type="button"
                     onClick={() => item.hasDropdown && toggleDropdown(item.name)}
-                    className={`
-                      px-8 py-2 text-base font-bold whitespace-nowrap transition-colors flex items-center gap-5
-                      ${isOpen
-                        ? 'bg-jb-yellow text-black'
-                        : 'text-white hover:bg-zinc-800'
-                      }
-                    `}
+                    className={`px-8 py-2 text-base font-bold whitespace-nowrap transition-colors flex items-center gap-5 ${isOpen ? 'bg-jb-yellow text-black' : 'text-white hover:bg-zinc-800'
+                      }`}
                   >
                     {item.name}
                   </button>
 
-                  {/* Products Dropdown */}
+                  {/* Desktop Dropdown: Products */}
                   {isOpen && item.name === 'Products' && (
-                    <div className="absolute top-full left-0 w-[340px] bg-white text-black shadow-2xl border border-gray-200 z-50 overflow-hidden">
-                      <div className="max-h-[480px] overflow-y-auto py-1 divide-y divide-gray-100">
-                        {productSubmenu.map((subItem) => {
-                          const IconComp = subItem.icon;
-                          return (
-                            <Link
-                              key={subItem.name}
-                              href={subItem.href}
-                              onClick={() => setActiveDropdown(null)}
-                              className="flex items-center justify-between px-4 py-3 hover:bg-jb-yellow rounded-sm transition group"
+                    <div
+                      className={`absolute top-full left-0 bg-white text-black shadow-2xl border border-gray-200 z-50 flex h-[460px] transition-all duration-200 ${selectedMainCategory ? 'w-[900px]' : selectedCategory ? 'w-[600px]' : 'w-[300px]'
+                        }`}
+                    >
+                      <div className="w-[300px] shrink-0 border-r border-gray-200 overflow-y-auto py-1 bg-gray-50">
+                        {loadingCategories ? (
+                          <div className="flex justify-center items-center h-full">
+                            <Loader2 className="animate-spin text-gray-500" size={24} />
+                          </div>
+                        ) : (
+                          categories.map((cat) => (
+                            <button
+                              type="button"
+                              key={cat.id}
+                              onClick={() => handleCategoryClick(cat)}
+                              className={`w-full flex items-center justify-between px-4 py-3 text-left text-sm font-semibold transition-colors ${selectedCategory?.id === cat.id ? 'bg-jb-yellow text-black' : 'hover:bg-gray-100'
+                                }`}
                             >
-                              <div className="flex items-center gap-3">
-                                <IconComp
-                                  size={20}
-                                  className="text-black shrink-0"
-                                />
-                                <span className="font-semibold text-sm leading-snug">
-                                  {subItem.name}
-                                </span>
-                              </div>
-                              <ChevronRight
-                                size={16}
-                                className="text-gray-400 group-hover:text-black transition"
-                              />
-                            </Link>
-                          );
-                        })}
+                              <span>{cat.name}</span>
+                              <ChevronRight size={16} className="text-gray-500" />
+                            </button>
+                          ))
+                        )}
                       </div>
+
+                      {selectedCategory && (
+                        <div className="w-[300px] shrink-0 border-r border-gray-200 overflow-y-auto py-1 bg-white">
+                          {loadingMainCategories ? (
+                            <div className="flex justify-center items-center h-full">
+                              <Loader2 className="animate-spin text-gray-500" size={24} />
+                            </div>
+                          ) : mainCategories.length === 0 ? (
+                            <div className="p-4 text-xs text-gray-400 text-center mt-10">No items available</div>
+                          ) : (
+                            mainCategories.map((mainCat) => (
+                              <button
+                                type="button"
+                                key={mainCat.id}
+                                onClick={() => handleMainCategoryClick(mainCat)}
+                                className={`w-full flex items-center justify-between px-4 py-2.5 text-left text-sm transition-colors ${selectedMainCategory?.id === mainCat.id ? 'bg-jb-yellow text-black font-semibold' : 'hover:bg-gray-100'
+                                  }`}
+                              >
+                                <span>{mainCat.name}</span>
+                                <ChevronRight size={16} className="text-gray-400" />
+                              </button>
+                            ))
+                          )}
+                        </div>
+                      )}
+
+                      {selectedCategory && selectedMainCategory && (
+                        <div className="w-[300px] shrink-0 overflow-y-auto py-1 bg-white">
+                          {loadingSubCategories ? (
+                            <div className="flex justify-center items-center h-full">
+                              <Loader2 className="animate-spin text-gray-500" size={24} />
+                            </div>
+                          ) : subCategories.length === 0 ? (
+                            <div className="p-4 text-xs text-gray-400 text-center mt-10">No sub-items available</div>
+                          ) : (
+                            subCategories.map((subCat) => (
+                              <Link
+                                key={subCat.id}
+                                href={`/collections/${subCat.categoryInfo?.slug}/${subCat.mainCategoryInfo?.mainSlug}/${subCat.subSlug}`}
+                                onClick={() => setActiveDropdown(null)}
+                                className="block px-4 py-2 text-sm text-gray-800 hover:bg-jb-yellow hover:text-black transition-colors"
+                              >
+                                {subCat.name}
+                              </Link>
+                            ))
+                          )}
+                        </div>
+                      )}
                     </div>
                   )}
 
-                  {/* Brands Dropdown */}
+                  {/* Desktop Dropdown: Brands */}
                   {isOpen && item.name === 'Brands' && (
                     <div className="absolute top-full left-0 w-[340px] bg-white text-black shadow-2xl z-50 py-2 border border-gray-100">
                       <div className="px-5 pb-3 border-b border-gray-200">
@@ -306,26 +423,24 @@ export default function Navbar() {
                       </div>
 
                       <div className="max-h-[400px] overflow-y-auto py-2">
-                        {brandsSubmenu.map((brand) => {
-                          // Formats the brand name into a URL slug (e.g., "Fisher & Paykel" -> "fisher-and-paykel")
-                          const brandSlug = brand
-                            .toLowerCase()
-                            .replace(/ & /g, '-and-')
-                            .replace(/[^a-z0-0\s-]/g, '')
-                            .trim()
-                            .replace(/\s+/g, '-');
-
-                          return (
+                        {loadingBrands ? (
+                          <div className="flex justify-center items-center h-full">
+                            <Loader2 className="animate-spin text-gray-500" size={24} />
+                          </div>
+                        ) : brands.length === 0 ? (
+                          <div className="p-4 text-xs text-gray-400 text-center mt-10">No brands available</div>
+                        ) : (
+                          brands.map((brand) => (
                             <Link
-                              key={brand}
-                              href={`/${brandSlug}`}
+                              key={brand.id}
+                              href={`/brands/${brand.slug}`}
                               onClick={() => setActiveDropdown(null)}
-                              className="block px-5 py-2.5 text-base font-normal text-black hover:bg-jb-yellow transition-colors rounded-sm"
+                              className="block px-4 py-2.5 text-sm text-gray-800 hover:bg-jb-yellow hover:text-black font-medium transition-colors"
                             >
-                              {brand}
+                              {brand.name}
                             </Link>
-                          );
-                        })}
+                          ))
+                        )}
                       </div>
                     </div>
                   )}
@@ -339,45 +454,168 @@ export default function Navbar() {
       {/* ================= MOBILE DRAWER MENU ================= */}
       {isMobileMenuOpen && (
         <div className="w-full bg-white text-black border-t border-gray-200 shadow-xl lg:hidden">
-          <div className="bg-black text-white text-center py-2.5 font-bold text-sm">
-            Main menu
+          {/* Header Bar with Back Button */}
+          <div className="bg-black text-white px-4 py-2.5 font-bold text-sm flex items-center justify-between">
+            {mobileLevel > 0 ? (
+              <button
+                type="button"
+                onClick={handleMobileBack}
+                className="flex items-center gap-1 text-jb-yellow hover:underline"
+              >
+                <ChevronLeft size={18} />
+                <span>Back</span>
+              </button>
+            ) : (
+              <div />
+            )}
+            <span className="truncate max-w-[200px]">
+              {mobileLevel === 0 && 'Main Menu'}
+              {mobileLevel === 1 && 'Products'}
+              {mobileLevel === 2 && selectedCategory?.name}
+              {mobileLevel === 3 && selectedMainCategory?.name}
+              {mobileLevel === 4 && 'Brands'}
+            </span>
+            <div className="w-12" />
           </div>
 
           <nav className="divide-y divide-gray-100">
-            <div className="py-2">
-              {categoryLinks.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition"
-                >
-                  <span className="font-bold text-base text-black">
-                    {item.name}
-                  </span>
-                  {item.hasDropdown && (
-                    <ChevronRight size={18} className="text-black" />
-                  )}
-                </Link>
-              ))}
-            </div>
+            {/* LEVEL 0: Main Menu */}
+            {mobileLevel === 0 && (
+              <>
+                <div className="py-2">
+                  {categoryLinks.map((item) => (
+                    <button
+                      key={item.name}
+                      type="button"
+                      onClick={() => {
+                        if (item.name === 'Products') {
+                          setMobileLevel(1);
+                        } else if (item.name === 'Brands') {
+                          handleBrandsMobileClick();
+                        }
+                      }}
+                      className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-50 transition text-left"
+                    >
+                      <span className="font-bold text-base text-black">{item.name}</span>
+                      {item.hasDropdown && <ChevronRight size={18} className="text-black" />}
+                    </button>
+                  ))}
+                </div>
 
-            <div className="py-3 px-1 space-y-1">
-              {secondaryLinks.map((item) => {
-                const IconComponent = item.icon;
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className="flex items-center gap-3.5 px-4 py-2.5 hover:bg-gray-50 transition"
-                  >
-                    <IconComponent size={20} className="text-black shrink-0" />
-                    <span className="text-sm font-medium text-black">
-                      {item.name}
-                    </span>
-                  </Link>
-                );
-              })}
-            </div>
+                <div className="py-3 px-1 space-y-1">
+                  {secondaryLinks.map((item) => {
+                    const IconComponent = item.icon;
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        onClick={closeMobileMenu}
+                        className="flex items-center gap-3.5 px-4 py-2.5 hover:bg-gray-50 transition"
+                      >
+                        <IconComponent size={20} className="text-black shrink-0" />
+                        <span className="text-sm font-medium text-black">{item.name}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+            {/* LEVEL 1: Primary Categories */}
+            {mobileLevel === 1 && (
+              <div className="py-2">
+                {loadingCategories ? (
+                  <div className="flex justify-center items-center py-10">
+                    <Loader2 className="animate-spin text-gray-500" size={24} />
+                  </div>
+                ) : (
+                  categories.map((cat) => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => handleCategoryClick(cat)}
+                      className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-50 text-left border-b border-gray-50"
+                    >
+                      <span className="font-semibold text-sm text-black">{cat.name}</span>
+                      <ChevronRight size={18} className="text-gray-400" />
+                    </button>
+                  ))
+                )}
+              </div>
+            )}
+
+            {/* LEVEL 2: Main Categories */}
+            {mobileLevel === 2 && (
+              <div className="py-2">
+                {loadingMainCategories ? (
+                  <div className="flex justify-center items-center py-10">
+                    <Loader2 className="animate-spin text-gray-500" size={24} />
+                  </div>
+                ) : mainCategories.length === 0 ? (
+                  <div className="p-6 text-xs text-gray-400 text-center">No categories available</div>
+                ) : (
+                  mainCategories.map((mainCat) => (
+                    <button
+                      key={mainCat.id}
+                      type="button"
+                      onClick={() => handleMainCategoryClick(mainCat)}
+                      className="w-full flex items-center justify-between px-5 py-3 hover:bg-gray-50 text-left border-b border-gray-50"
+                    >
+                      <span className="text-sm font-medium text-black">{mainCat.name}</span>
+                      <ChevronRight size={18} className="text-gray-400" />
+                    </button>
+                  ))
+                )}
+              </div>
+            )}
+
+            {/* LEVEL 3: Sub Categories */}
+            {mobileLevel === 3 && (
+              <div className="py-2">
+                {loadingSubCategories ? (
+                  <div className="flex justify-center items-center py-10">
+                    <Loader2 className="animate-spin text-gray-500" size={24} />
+                  </div>
+                ) : subCategories.length === 0 ? (
+                  <div className="p-6 text-xs text-gray-400 text-center">No sub-items available</div>
+                ) : (
+                  subCategories.map((subCat) => (
+                    <Link
+                      key={subCat.id}
+                      href={`/collections/${subCat.categoryInfo?.slug}/${subCat.mainCategoryInfo?.mainSlug}/${subCat.subSlug}`}
+                      onClick={closeMobileMenu}
+                      className="block px-5 py-3 text-sm text-gray-800 hover:bg-jb-yellow transition-colors border-b border-gray-50"
+                    >
+                      {subCat.name}
+                    </Link>
+                  ))
+                )}
+              </div>
+            )}
+
+            {/* LEVEL 4: Mobile Brands View */}
+            {mobileLevel === 4 && (
+              <div className="py-2">
+                {loadingBrands ? (
+                  <div className="flex justify-center items-center py-10">
+                    <Loader2 className="animate-spin text-gray-500" size={24} />
+                  </div>
+                ) : brands.length === 0 ? (
+                  <div className="p-6 text-xs text-gray-400 text-center">No brands available</div>
+                ) : (
+                  brands.map((brand) => (
+                    <Link
+                      key={brand.id}
+                      href={`/brands/${brand.slug}`}
+                      onClick={closeMobileMenu}
+                      className="block px-5 py-3 text-sm text-gray-800 hover:bg-jb-yellow transition-colors border-b border-gray-50"
+                    >
+                      {brand.name}
+                    </Link>
+                  ))
+                )}
+              </div>
+            )}
           </nav>
         </div>
       )}

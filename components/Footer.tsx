@@ -41,7 +41,7 @@ const XIcon = () => (
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-[#f4f4f4] text-[#333333] pt-12 pb-8 px-4 sm:px-6 lg:px-8 font-sans">
+    <footer className="border-t-8 border-jb-yellow w-full bg-[#f4f4f4] text-[#333333] pt-12 pb-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="mx-auto w-[95%] md:w-[90%] max-w-[1280px]">
         {/* Main Footer Body */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-6 pb-12">

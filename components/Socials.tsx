@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-export default function FloatingChatButton() {
+export default function Socials() {
     const [isHydrated, setIsHydrated] = useState(false);
 
     useEffect(() => {

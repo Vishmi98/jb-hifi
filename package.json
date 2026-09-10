@@ -9,15 +9,27 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@react-email/components": "^1.0.12",
+    "@react-email/tailwind": "^2.0.7",
+    "formik": "^2.4.9",
     "framer-motion": "^13.1.1",
+    "imagekit": "^6.0.0",
+    "js-cookie": "^3.0.8",
     "lucide-react": "^1.33.0",
+    "mongoose": "^9.9.5",
     "next": "16.3.2",
+    "nodemailer": "^10.0.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "react-pageflip": "^2.0.3"
+    "react-easy-crop": "^6.2.3",
+    "react-pageflip": "^2.0.3",
+    "react-toastify": "^11.1.0",
+    "render": "^0.1.4",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
