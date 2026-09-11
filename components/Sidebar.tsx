@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LogOut, Paperclip } from 'lucide-react';
+import { House, LogOut, Paperclip } from 'lucide-react';
 
 import { handleCleanCookie } from '@/utils/cookie.util';
 import { ProfileLink, SidebarProps } from '@/constants/types';
@@ -16,7 +16,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     { id: 'categories', label: "Categories", href: '/admin/categories', icon: <Paperclip className="h-4 w-4 mr-2" /> },
     { id: 'mainCategories', label: "Main Categories", href: '/admin/mainCategories', icon: <Paperclip className="h-4 w-4 mr-2" /> },
     { id: 'subCategories', label: "Sub Categories", href: '/admin/subCategories', icon: <Paperclip className="h-4 w-4 mr-2" /> },
+    { id: 'leafCategories', label: "Leaf Categories", href: '/admin/leafCategories', icon: <Paperclip className="h-4 w-4 mr-2" /> },
     { id: 'brands', label: "Brands", href: '/admin/brands', icon: <Paperclip className="h-4 w-4 mr-2" /> },
+    { id: 'stores', label: "Stores", href: '/admin/stores', icon: <House className="h-4 w-4 mr-2" /> },
   ];
 
   const handleLogOut = () => {

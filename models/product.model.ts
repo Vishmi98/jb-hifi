@@ -32,10 +32,13 @@ export interface IProduct extends Document {
 
     // Categorization & Brand
     brandId?: number;
+    storeId?: number;
     categoryId?: number;
     mainCategoryId?: number;
     subCategoryId?: number;
-
+    ratings?: number;
+    reviews?: string[];
+    
     // Pricing & Inventory
     price: number;
     originalPrice?: number;
@@ -104,6 +107,7 @@ const productSchema = new Schema<IProduct>(
 
         // Category & Brand Foreign Keys
         brandId: { type: Number, index: true },
+        storeId: { type: Number, index: true },
         categoryId: { type: Number, index: true },
         mainCategoryId: { type: Number, index: true },
         subCategoryId: { type: Number, index: true },
@@ -143,6 +147,13 @@ const productSchema = new Schema<IProduct>(
 productSchema.virtual("brandInfo", {
     ref: "Brand",
     localField: "brandId",
+    foreignField: "id",
+    justOne: true,
+});
+
+productSchema.virtual("storeInfo", {
+    ref: "Store",
+    localField: "storeId",
     foreignField: "id",
     justOne: true,
 });
