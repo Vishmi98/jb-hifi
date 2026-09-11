@@ -70,3 +70,17 @@ export type SingleLeafCategoryResponseDataType = {
 export type LeafCategoryDetailsProps = {
     leafCategory: LeafCategoryDataType;
 };
+
+export type LeafCategoriesBySubCategoriesResponseType = {
+    success: boolean;
+    message: string;
+    leafCategories: LeafCategoryDataType[];
+};
+
+export type LeafCategoriesBySubCategoriesResponseDataType = {
+    success: boolean;
+    message: string;
+    data?: {
+        leafCategories: LeafCategoryDataType[];
+    };
+};

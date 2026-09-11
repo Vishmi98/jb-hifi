@@ -1,6 +1,8 @@
 import axios from "axios";
 
 import {
+    LeafCategoriesBySubCategoriesResponseDataType,
+    LeafCategoriesBySubCategoriesResponseType,
     LeafCategoriesResponseDataType,
     LeafCategoriesResponseType,
     PublishLeafCategoryResponseDataType,
@@ -114,5 +116,23 @@ export const getLeafCategoryBySlug = async (props: {
         success: response.success,
         message: response.message,
         leafCategory: response.data.leafCategory,
+    };
+};
+
+export const getLeafCategoryBySubCategory = async (props: {
+    subCategoryId: number;
+}): Promise<LeafCategoriesBySubCategoriesResponseType> => {
+    const { subCategoryId } = props;
+
+    const response: LeafCategoriesBySubCategoriesResponseDataType = await apiCall({
+        url: `${URL}/leafCategory/get-by-subCategory`,
+        method: "POST",
+        body: { subCategoryId },
+    });
+
+    return {
+        success: response.success,
+        message: response.message,
+        leafCategories: response?.data?.leafCategories ?? [],
     };
 };

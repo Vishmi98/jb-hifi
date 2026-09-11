@@ -2,6 +2,8 @@ import { getBrandBySlug } from "@/modules/brand/brand.service";
 import { BrandDataType } from "@/modules/brand/brand.types";
 import { CategoryDataType } from "@/modules/category/category.types";
 import { getCategoryBySlug } from "@/modules/homePage/homePage.service";
+import { getLeafCategoryBySlug } from "@/modules/leafCategory/leafCategory.service";
+import { LeafCategoryDataType } from "@/modules/leafCategory/leafCategory.types";
 import { getMainCategoryBySlug } from "@/modules/mainCategory/mainCategory.service";
 import { MainCategoryDataType } from "@/modules/mainCategory/mainCategory.types";
 import { getSubCategoryBySlug } from "@/modules/subCategory/subCategory.service";
@@ -56,6 +58,19 @@ export async function fetchBrand(slug: string): Promise<BrandDataType | null> {
         return res.brand;
     } catch (error) {
         console.error("Error fetching brand data:", error);
+        return null;
+    }
+}
+
+export async function fetchLeafCategory(leafSlug: string): Promise<LeafCategoryDataType | null> {
+    try {
+        const res = await getLeafCategoryBySlug({ leafSlug });
+        if (!res.success || !res.leafCategory) {
+            return null;
+        }
+        return res.leafCategory;
+    } catch (error) {
+        console.error("Error fetching leaf category data:", error);
         return null;
     }
 }

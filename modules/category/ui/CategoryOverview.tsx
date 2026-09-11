@@ -1,10 +1,10 @@
 import React from 'react'
 import Link from 'next/link';
 
-import { CategoryDetailsProps } from '../category.types';
+import HeroCarousel from './HeroCarousel';
 import MainCategoryCarousel from './MainCategoryCarousel';
+import { CategoryDetailsProps } from '../category.types';
 
-import HeroCarousel from '@/modules/collections/ui/HeroCarousel';
 import { COLLECTION_PRODUCTS, FEATURED_PRODUCTS } from '@/constants/data';
 import ProductCard from '@/modules/homePage/ui/ProductCard';
 import ProductFilters from '@/modules/collections/ui/ProductFilters';
@@ -30,7 +30,7 @@ const CategoryOverview = ({ category }: CategoryDetailsProps) => {
                 </div>
             </div>
 
-            <HeroCarousel />
+            <HeroCarousel bannerType="category" categoryId={id} />
 
             {/* Header Description */}
             <div className="mt-8 mb-6">

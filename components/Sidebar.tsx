@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { House, LogOut, Paperclip } from 'lucide-react';
+import { Award, FolderTree, GitCommit, Images, Layers, LogOut, Store, Tag } from 'lucide-react';
 
 import { handleCleanCookie } from '@/utils/cookie.util';
 import { ProfileLink, SidebarProps } from '@/constants/types';
@@ -13,12 +13,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const pathname = usePathname();
 
   const profileLinks: ProfileLink[] = [
-    { id: 'categories', label: "Categories", href: '/admin/categories', icon: <Paperclip className="h-4 w-4 mr-2" /> },
-    { id: 'mainCategories', label: "Main Categories", href: '/admin/mainCategories', icon: <Paperclip className="h-4 w-4 mr-2" /> },
-    { id: 'subCategories', label: "Sub Categories", href: '/admin/subCategories', icon: <Paperclip className="h-4 w-4 mr-2" /> },
-    { id: 'leafCategories', label: "Leaf Categories", href: '/admin/leafCategories', icon: <Paperclip className="h-4 w-4 mr-2" /> },
-    { id: 'brands', label: "Brands", href: '/admin/brands', icon: <Paperclip className="h-4 w-4 mr-2" /> },
-    { id: 'stores', label: "Stores", href: '/admin/stores', icon: <House className="h-4 w-4 mr-2" /> },
+    { id: 'categories', label: "Categories", href: '/admin/categories', icon: <FolderTree className="h-4 w-4 mr-2" /> },
+    { id: 'mainCategories', label: "Main Categories", href: '/admin/mainCategories', icon: <Layers className="h-4 w-4 mr-2" /> },
+    { id: 'subCategories', label: "Sub Categories", href: '/admin/subCategories', icon: <GitCommit className="h-4 w-4 mr-2" /> },
+    { id: 'leafCategories', label: "Leaf Categories", href: '/admin/leafCategories', icon: <Tag className="h-4 w-4 mr-2" /> },
+    { id: 'brands', label: "Brands", href: '/admin/brands', icon: <Award className="h-4 w-4 mr-2" /> },
+    { id: 'stores', label: "Stores", href: '/admin/stores', icon: <Store className="h-4 w-4 mr-2" /> },
+    { id: 'bannerCollection', label: "Banner Collection", href: '/admin/bannerCollection', icon: <Images className="h-4 w-4 mr-2" /> },
   ];
 
   const handleLogOut = () => {

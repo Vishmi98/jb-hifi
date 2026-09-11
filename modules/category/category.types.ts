@@ -46,3 +46,13 @@ export type EditCategoryModalProps = {
     reloadData: () => void;
     initialValues: CategoryDataType | null;
 }
+
+export interface HeroCarouselProps {
+    bannerType?: "category" | "main category" | "sub category" | "leaf category" | "brand" | "home" | "product";
+    categoryId?: number;
+    mainCategoryId?: number;
+    subCategoryId?: number;
+    leafCategoryId?: number;
+    brandId?: number;
+    productId?: number;
+}

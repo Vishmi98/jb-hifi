@@ -1,8 +1,7 @@
 import React from 'react'
 import Link from 'next/link';
 
-import LeafCategoryCarousel from './LeafCategoryCarousel';
-import { SubCategoryDetailsProps } from '../subCategory.types';
+import { LeafCategoryDetailsProps } from '../leafCategory.types';
 
 import HeroCarousel from '@/modules/collections/ui/HeroCarousel';
 import { COLLECTION_PRODUCTS, FEATURED_PRODUCTS } from '@/constants/data';
@@ -10,16 +9,17 @@ import ProductCard from '@/modules/homePage/ui/ProductCard';
 import ProductFilters from '@/modules/collections/ui/ProductFilters';
 
 
-const SubCategoryOverview = ({ subCategory }: SubCategoryDetailsProps) => {
+const LeafCategoryOverview = ({ leafCategory }: LeafCategoryDetailsProps) => {
     const {
         id,
         name,
-        subSlug,
+        leafSlug,
         imagePath,
         description,
         categoryInfo,
-        mainCategoryInfo
-    } = subCategory;
+        mainCategoryInfo,
+        subCategoryInfo
+    } = leafCategory;
 
     return (
         <div className="min-h-screen w-[95%] md:w-[90%] mx-auto text-black">
@@ -31,6 +31,8 @@ const SubCategoryOverview = ({ subCategory }: SubCategoryDetailsProps) => {
                     <span className="font-semibold text-gray-600">{categoryInfo?.name}</span>
                     <span>/</span>
                     <span className="font-semibold text-gray-600">{mainCategoryInfo?.name}</span>
+                    <span>/</span>
+                    <span className="font-semibold text-gray-600">{subCategoryInfo?.name}</span>
                     <span>/</span>
                     <span className="font-semibold text-gray-600">{name}</span>
                 </div>
@@ -47,8 +49,6 @@ const SubCategoryOverview = ({ subCategory }: SubCategoryDetailsProps) => {
                     {description}
                 </p>
             </div>
-
-            <LeafCategoryCarousel subCategoryId={id} />
 
             {/* Featured Products Section */}
             <section className="my-12">
@@ -87,4 +87,4 @@ const SubCategoryOverview = ({ subCategory }: SubCategoryDetailsProps) => {
     )
 }
 
-export default SubCategoryOverview
+export default LeafCategoryOverview
