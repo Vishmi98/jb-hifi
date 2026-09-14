@@ -6,6 +6,8 @@ import { getLeafCategoryBySlug } from "@/modules/leafCategory/leafCategory.servi
 import { LeafCategoryDataType } from "@/modules/leafCategory/leafCategory.types";
 import { getMainCategoryBySlug } from "@/modules/mainCategory/mainCategory.service";
 import { MainCategoryDataType } from "@/modules/mainCategory/mainCategory.types";
+import { getStoreBySlug } from "@/modules/store/store.service";
+import { StoreDataType } from "@/modules/store/store.types";
 import { getSubCategoryBySlug } from "@/modules/subCategory/subCategory.service";
 import { SubCategoryDataType } from "@/modules/subCategory/subCategory.types";
 
@@ -71,6 +73,19 @@ export async function fetchLeafCategory(leafSlug: string): Promise<LeafCategoryD
         return res.leafCategory;
     } catch (error) {
         console.error("Error fetching leaf category data:", error);
+        return null;
+    }
+}
+
+export async function fetchSeller(slug: string): Promise<StoreDataType | null> {
+    try {
+        const res = await getStoreBySlug({ slug });
+        if (!res.success || !res.store) {
+            return null;
+        }
+        return res.store;
+    } catch (error) {
+        console.error("Error fetching store data:", error);
         return null;
     }
 }

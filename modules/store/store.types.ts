@@ -58,3 +58,21 @@ export type EditStoreModalProps = {
     initialValues: StoreDataType | null;
     reloadData: () => void;
 };
+
+export type SingleStoreResponseType = {
+    success: boolean;
+    message: string;
+    store: StoreDataType | null;
+}
+
+export type SingleStoreResponseDataType = {
+    success: boolean;
+    message: string;
+    data: {
+        store: StoreDataType;
+    };
+}
+
+export type StoreOverviewProps = {
+    store: StoreDataType
+}

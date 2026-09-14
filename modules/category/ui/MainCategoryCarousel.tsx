@@ -13,12 +13,15 @@ import { MainCategoryCard } from '@/modules/mainCategory/ui/MainCategoryCard';
 
 interface MainCategoryCarouselProps {
     categoryId: number;
+    parentSlug?: string; // Optional prop override
 }
 
-export default function MainCategoryCarousel({ categoryId }: MainCategoryCarouselProps) {
+export default function MainCategoryCarousel({ categoryId, parentSlug }: MainCategoryCarouselProps) {
     const params = useParams();
-    // Next.js dynamic route param (e.g., /collections/[category] -> params.category)
-    const parentCategorySlug = params?.slug as string;
+
+    // Safely extract parameter or fallback to parentSlug / 'marketplace'
+    const routeSlug = params?.slug || params?.category;
+    const parentCategorySlug = parentSlug || (typeof routeSlug === 'string' ? routeSlug : 'marketplace');
 
     const [mainCategories, setMainCategories] = useState<MainCategoryDataType[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -110,13 +113,9 @@ export default function MainCategoryCarousel({ categoryId }: MainCategoryCarouse
                 style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
                 {mainCategories.map((cat) => {
-                    // Resolve main category slug
-                    const subcategorySlug = cat.mainSlug || cat.mainSlug || slugify(cat.name);
+                    const subcategorySlug = cat.mainSlug || slugify(cat.name);
 
-                    // Creates route: /collections/mobile-phones/android-phones
-                    const dynamicHref = parentCategorySlug
-                        ? `/collections/${parentCategorySlug}/${subcategorySlug}`
-                        : `/collections/${subcategorySlug}`;
+                    const dynamicHref = `/collections/${parentCategorySlug}/${subcategorySlug}`;
 
                     return (
                         <div key={cat.id} className="snap-start shrink-0">

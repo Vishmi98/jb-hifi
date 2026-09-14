@@ -7,23 +7,18 @@ import { toast, ToastContainer } from "react-toastify";
 import { X } from "lucide-react";
 import * as Yup from "yup";
 
+import { addBannerItem } from "../../bannerCollection.service";
+import { AddBannerItemModalProps } from "../../bannerCollection.types";
+
 import { getBrands } from "@/modules/brand/brand.service";
 import { getCategories } from "@/modules/category/category.service";
 import { getMainCategoryByCategory } from "@/modules/mainCategory/mainCategory.service";
 import { getSubCategoryByMainCategory } from "@/modules/subCategory/subCategory.service";
 import { getLeafCategoryBySubCategory } from "@/modules/leafCategory/leafCategory.service";
-import { addBannerItem } from "../../bannerCollection.service";
-import { BannerCollectionDataType } from "../../bannerCollection.types";
 
 import { MAX_SIZE_MB } from "@/constants/data";
 import CropModal from "@/components/ImageCropper";
 
-type AddBannerItemModalProps = {
-    isOpen: boolean;
-    onClose: () => void;
-    bannerCollection: BannerCollectionDataType;
-    reloadData: () => void;
-};
 
 const AddBannerItemModal: FC<AddBannerItemModalProps> = ({
     isOpen,
@@ -394,7 +389,7 @@ const AddBannerItemModal: FC<AddBannerItemModalProps> = ({
                                         className="block w-full text-xs text-gray-900 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border file:text-xs file:font-semibold file:bg-gray-50 hover:file:bg-gray-100 file:border-gray-200 cursor-pointer"
                                     />
                                     {image && (
-                                        <div className="mt-2 relative w-36 h-36 border rounded overflow-hidden">
+                                        <div className="mt-2 relative w-36 h-50 border rounded overflow-hidden">
                                             <Image
                                                 src={URL.createObjectURL(image)}
                                                 alt="Item Preview"

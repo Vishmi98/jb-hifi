@@ -8,7 +8,7 @@ interface CategorySkeletonProps {
 
 export const CategorySkeleton: React.FC<CategorySkeletonProps> = ({ count = 8 }) => {
     return (
-        <div className="flex gap-3 md:gap-14 overflow-hidden pb-4 px-2">
+        <div className="flex items-center justify-center gap-3 md:gap-14 overflow-hidden pb-4 px-2">
             {Array.from({ length: count }).map((_, index) => (
                 <div
                     key={index}

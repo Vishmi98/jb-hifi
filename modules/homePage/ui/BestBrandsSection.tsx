@@ -5,9 +5,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRight } from 'lucide-react';
 
-import { slugify } from '@/utils/slug';
 import { BrandDataType } from '../homePage.types';
 import { getBrands } from '../homePage.service';
+
+import { slugify } from '@/utils/slug';
+
 
 // Shimmer SVG generator for smooth image loading
 const shimmer = (w: number, h: number) => `
@@ -65,11 +67,11 @@ export default function BestBrandsSection() {
     }, []);
 
     return (
-        <section className="w-full bg-white py-8 px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto w-[95%] md:w-[90%]">
+        <section className="w-full bg-white py-8">
+            <div className="mx-auto w-[95%]">
                 {/* Header Bar */}
                 <div className="flex items-center justify-between mb-8">
-                    <h2 className="sub-titles text-xl md:text-3xl font-extrabold uppercase">
+                    <h2 className="jb-callout-logo text-2xl md:text-4xl mb-4">
                         ALL THE BEST BRANDS
                     </h2>
 

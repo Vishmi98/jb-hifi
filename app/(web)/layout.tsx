@@ -23,10 +23,11 @@ const roboto = Roboto({
   weight: ["300", "400", "500", "700", "900"],
 });
 
-const bowlby = Bowlby_One_SC({
-  variable: "--font-jb-display",
-  subsets: ["latin"],
+const crazy = localFont({
+  src: "./fonts/JBCrazy.woff",
+  variable: "--font-jb-crazy",
   weight: "400",
+  style: "normal",
 });
 
 const openSans = localFont({
@@ -59,7 +60,7 @@ export default function RootLayout({
         ${geistSans.variable}
         ${geistMono.variable}
         ${roboto.variable}
-        ${bowlby.variable}
+        ${crazy.variable}
         ${openSans.variable}
         ${jbCallout.variable}
         h-full

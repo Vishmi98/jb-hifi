@@ -12,10 +12,16 @@ interface CategoryCardProps {
 }
 
 export const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
+
+    const targetHref =
+        category.slug === 'marketplace'
+            ? '/marketplace'
+            : `/collections/${category.slug}`;
+
     return (
         <Link
-            href={`/collections/${category.slug}`}
-            className="flex flex-col items-center shrink-0 w-[110px] sm:w-[120px] group text-center py-2"
+            href={targetHref}
+            className="flex flex-col items-center shrink-0 w-auto group text-center py-2"
         >
             {/* White Circular Badge Frame */}
             <div className="md:w-[100px] md:h-[100px] w-[85px] h-[85px] rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center overflow-hidden transition-transform duration-200 group-hover:scale-105 relative">

@@ -13,7 +13,7 @@ export default function ProductCard({ prod }: ProductCardProps) {
     return (
         <div
             key={prod.id}
-            className="shrink-0 w-[200px] sm:w-[250px] border border-gray-200 bg-white flex flex-col justify-between p-1 md:p-3 relative group hover:border-black transition-all"
+            className="shrink-0 w-full border border-gray-200 bg-white flex flex-col justify-between p-1 md:p-3 relative group hover:border-black transition-all"
         >
             {/* Top Badges & Favorite Heart */}
             <div className="flex justify-between items-start mb-2 relative z-10 min-h-[40px]">
@@ -118,7 +118,7 @@ export default function ProductCard({ prod }: ProductCardProps) {
                     <div className="bg-jb-yellow border-1 border-black pt-1.5 w-full text-center relative shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                         {/* Crossed Out Original Price Ticket */}
                         {prod.originalPrice && (
-                            <div className="absolute right-8 md:right-14 bg-jb-red text-white font-black text-[10px] px-1.5 uppercase inline-block -mt-3 mb-0.5 transform line-through">
+                            <div className="absolute right-8 md:right-16 bg-jb-red text-white font-black text-[10px] px-1.5 uppercase inline-block -mt-3 mb-0.5 transform line-through">
                                 TICKET ${prod.originalPrice}
                             </div>
                         )}
@@ -147,7 +147,7 @@ export default function ProductCard({ prod }: ProductCardProps) {
 
                         {/* Optional Tagline (e.g., FREE DELIVERY) */}
                         {prod.tagline && (
-                            <div className="absolute bottom-[-10] right-8 md:right-13 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-white  text-black font-black text-[10px] px-1.5 uppercase inline-block -mt-3 mb-0.5 transform">
+                            <div className="absolute bottom-[-10] right-8 md:right-10 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] bg-white  text-black font-black text-[10px] px-1.5 uppercase inline-block -mt-3 mb-0.5 transform">
                                 {prod.tagline}
                             </div>
                         )}

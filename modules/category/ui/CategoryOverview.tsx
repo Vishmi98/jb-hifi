@@ -52,7 +52,7 @@ const CategoryOverview = ({ category }: CategoryDetailsProps) => {
 
                 {/* Flex container with explicit items-stretch for uniform height */}
                 <div
-                    className="flex gap-4 overflow-x-auto scrollbar-none scroll-smooth pb-4"
+                    className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 justify-items-center"
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                     {FEATURED_PRODUCTS.map((prod) => (
@@ -71,7 +71,7 @@ const CategoryOverview = ({ category }: CategoryDetailsProps) => {
                 <ProductFilters />
 
                 {/* Product Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 justify-items-center">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 justify-items-center">
                     {COLLECTION_PRODUCTS.map((product) => (
                         <div key={product.id} className="w-full flex justify-center">
                             <ProductCard prod={product} />

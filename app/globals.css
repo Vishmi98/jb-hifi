@@ -12,6 +12,7 @@
   --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
   --font-sans: var(--font-roboto), Arial, Helvetica, sans-serif;
+  --font-crazy: var(--font-jb-crazy);
 }
 
 :root {
@@ -203,7 +204,32 @@ body {
 
 .jb-callout-logo {
   font-family: var(--font-jb-callout), "Bangers", "Impact", sans-serif;
-  color: #000;
   font-weight: bolder;
   text-transform: uppercase;
+}
+
+.jb-callout-yellow {
+  font-family: var(--font-jb-callout), "Bangers", "Impact", sans-serif;
+  color: var(--color-jb-yellow);
+  font-weight: bolder;
+  text-transform: uppercase;
+}
+
+.jb-crazy {
+  font-family: var(--font-jb-crazy), sans-serif;
+  font-weight: 400;
+}
+
+.jb-crazy_new {
+  font-family: var(--font-jb-crazy), sans-serif;
+  color: #ffffff;
+  font-weight: bolder;
+  text-transform: uppercase;
+  letter-spacing: -0.1em;
+  
+  /* 1. Thick Black Text Outline */
+  -webkit-text-stroke: 1px #000;
+  
+  /* 2. Offset Hard Black Drop Shadow */
+  text-shadow: 1px 1px 0px #000000;
 }

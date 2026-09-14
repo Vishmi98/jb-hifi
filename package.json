@@ -22,6 +22,7 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-easy-crop": "^6.2.3",
+    "react-multi-carousel": "^2.8.6",
     "react-pageflip": "^2.0.3",
     "react-toastify": "^11.1.0",
     "render": "^0.1.4",

@@ -135,7 +135,7 @@ export default function HeroCarousel({
   return (
     <div className="w-full">
       {/* Main Banner Box */}
-      <div className="relative w-full h-[250px] sm:h-[350px] md:h-[450px] overflow-hidden bg-black select-none border-2 border-black">
+      <div className="relative w-full h-[250px] sm:h-[350px] md:h-[450px] overflow-hidden bg-black select-none border-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] border-black">
         <div
           className="flex w-full h-full transition-transform duration-700 ease-in-out"
           style={{ transform: `translateX(-${current * 100}%)` }}

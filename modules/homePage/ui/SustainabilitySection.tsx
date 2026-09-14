@@ -7,10 +7,10 @@ import { SUSTAINABILITY_ITEMS } from '@/constants/data';
 
 export default function SustainabilitySection() {
     return (
-        <section className="w-full bg-[#f4f4f4] py-12 px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto w-[95%] md:w-[90%]">
+        <section className="w-full bg-[#f4f4f4] py-12">
+            <div className="mx-auto w-[95%]">
                 {/* Title */}
-                <h2 className="sub-titles text-xl md:text-3xl">
+                <h2 className="jb-callout-logo text-2xl md:text-4xl mb-4">
                     SUSTAINABILITY AT JB
                 </h2>
 

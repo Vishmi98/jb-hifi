@@ -91,3 +91,10 @@ export interface GetBannerByTypeResponseType {
     message: string;
     data?: BannerCollectionDataType
 }
+
+export type AddBannerItemModalProps = {
+    isOpen: boolean;
+    onClose: () => void;
+    bannerCollection: BannerCollectionDataType;
+    reloadData: () => void;
+};

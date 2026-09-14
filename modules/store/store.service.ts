@@ -2,6 +2,8 @@ import axios from "axios";
 
 import {
     PublishStoreResponseDataType,
+    SingleStoreResponseDataType,
+    SingleStoreResponseType,
     StoresResponseDataType,
     StoresResponseType,
 } from "./store.types";
@@ -95,4 +97,20 @@ export const updateStore = async (data: FormData) => {
             store: response.data,
         },
     };
+};
+
+export const getStoreBySlug = async (props: { slug: string }): Promise<SingleStoreResponseType> => {
+    const { slug } = props;
+
+    const response: SingleStoreResponseDataType = await apiCall({
+        url: `${URL}/store/get-by-slug`,
+        method: 'POST',
+        body: { slug },
+    })
+
+    return ({
+        success: response.success,
+        message: response.message,
+        store: response.data.store
+    });
 };
