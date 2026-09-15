@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useCallback, useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 
 import CartDrawer from './CartDrawer';
+
 import { CategoryDataType } from '@/modules/category/category.types';
 import { MainCategoryDataType } from '@/modules/mainCategory/mainCategory.types';
 import { SubCategoryDataType } from '@/modules/subCategory/subCategory.types';
@@ -28,10 +29,11 @@ import { getMainCategoryByCategory } from '@/modules/mainCategory/mainCategory.s
 import { getSubCategoryByMainCategory } from '@/modules/subCategory/subCategory.service';
 import { BrandDataType } from '@/modules/brand/brand.types';
 import { getBrands } from '@/modules/brand/brand.service';
+import { subscribeToDataChanges } from '@/lib/realtimeClient';
 
 
 const categoryLinks = [
-  { name: 'New', href: '#', hasDropdown: false },
+  { name: 'New', href: '/blogs/new-at-jb', hasDropdown: false },
   { name: 'Products', href: '#', hasDropdown: true },
   { name: 'Brands', href: '#', hasDropdown: true },
   { name: "Father's Day", href: '#', hasDropdown: true },
@@ -128,20 +130,24 @@ export default function Navbar() {
   }
 
   // Fetch Brands handler
-  const fetchBrandsList = async () => {
-    if (brands.length > 0) return;
-    setLoadingBrands(true);
+  const fetchBrandsList = useCallback(async (force = false, showLoading = true) => {
+    if (!force && brands.length > 0) return;
+    if (showLoading) {
+      setLoadingBrands(true);
+    }
     try {
-      const res = await getBrands(1, 100);
+      const res = await getBrands();
       if (res.success && res.brands) {
         setBrands(res.brands);
       }
     } catch (err) {
       console.error('Failed to fetch brands:', err);
     } finally {
-      setLoadingBrands(false);
+      if (showLoading) {
+        setLoadingBrands(false);
+      }
     }
-  };
+  }, [brands.length]);
 
   // Open Brands in Mobile Navigation
   const handleBrandsMobileClick = () => {
@@ -173,23 +179,42 @@ export default function Navbar() {
     setSelectedMainCategory(null);
   };
 
-  useEffect(() => {
-    const fetchCategoriesList = async () => {
+  const fetchCategoriesList = useCallback(async (showLoading = true) => {
+    if (showLoading) {
       setLoadingCategories(true);
-      try {
-        const res = await getCategories(1, 100);
-        if (res.success && res.categories) {
-          setCategories(res.categories);
-        }
-      } catch (err) {
-        console.error('Failed to fetch categories:', err);
-      } finally {
+    }
+
+    try {
+      const res = await getCategories();
+      if (res.success && res.categories) {
+        setCategories(res.categories);
+      }
+    } catch (err) {
+      console.error('Failed to fetch categories:', err);
+    } finally {
+      if (showLoading) {
         setLoadingCategories(false);
       }
-    };
-
-    fetchCategoriesList();
+    }
   }, []);
+
+  useEffect(() => {
+    const initialFetchId = window.setTimeout(() => {
+      void fetchCategoriesList();
+    }, 0);
+    const unsubscribeCategories = subscribeToDataChanges('categories', () => {
+      void fetchCategoriesList(false);
+    });
+    const unsubscribeBrands = subscribeToDataChanges('brands', () => {
+      void fetchBrandsList(true, false);
+    });
+
+    return () => {
+      window.clearTimeout(initialFetchId);
+      unsubscribeCategories();
+      unsubscribeBrands();
+    };
+  }, [fetchBrandsList, fetchCategoriesList]);
 
   const navRef = useRef<HTMLDivElement>(null);
 
@@ -321,16 +346,28 @@ export default function Navbar() {
           <ul className="flex items-center flex-wrap">
             {categoryLinks.map((item) => {
               const isOpen = activeDropdown === item.name;
+              const linkClasses = `px-8 py-2 text-base font-bold whitespace-nowrap transition-colors flex items-center gap-5 ${isOpen ? 'bg-jb-yellow text-black' : 'text-white hover:text-black hover:bg-jb-yellow'
+                }`;
+
               return (
                 <li key={item.name} className="relative">
-                  <button
-                    type="button"
-                    onClick={() => item.hasDropdown && toggleDropdown(item.name)}
-                    className={`px-8 py-2 text-base font-bold whitespace-nowrap transition-colors flex items-center gap-5 ${isOpen ? 'bg-jb-yellow text-black' : 'text-white hover:bg-zinc-800'
-                      }`}
-                  >
-                    {item.name}
-                  </button>
+                  {item.hasDropdown ? (
+                    <button
+                      type="button"
+                      onClick={() => toggleDropdown(item.name)}
+                      className={linkClasses}
+                    >
+                      {item.name}
+                    </button>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      onClick={() => setActiveDropdown(null)}
+                      className={linkClasses}
+                    >
+                      {item.name}
+                    </Link>
+                  )}
 
                   {/* Desktop Dropdown: Products */}
                   {isOpen && item.name === 'Products' && (
@@ -414,7 +451,7 @@ export default function Navbar() {
                     <div className="absolute top-full left-0 w-[340px] bg-white text-black shadow-2xl z-50 py-2 border border-gray-100">
                       <div className="px-5 pb-3 border-b border-gray-200">
                         <Link
-                          href="#"
+                          href="/brands"
                           onClick={() => setActiveDropdown(null)}
                           className="font-bold text-black hover:underline block"
                         >

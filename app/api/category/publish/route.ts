@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import CategoryModel from "@/models/category.model";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
+import { publishDataChange } from "@/services/realtime";
 
 export async function POST(req: NextRequest) {
     try {
@@ -25,6 +26,8 @@ export async function POST(req: NextRequest) {
         if (!category) {
             return sendErrorResponse("Category not found", 404);
         }
+
+        await publishDataChange("categories");
 
         return sendSuccessResponse(
             `Category ${Boolean(isPublish) ? "published" : "unpublished"} successfully`,

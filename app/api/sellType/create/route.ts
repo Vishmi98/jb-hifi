@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import SellTypeModel from "@/models/sellType.model";
+import { publishDataChange } from "@/services/realtime";
 
 export async function POST(req: NextRequest) {
     try {
@@ -23,6 +24,8 @@ export async function POST(req: NextRequest) {
             id: nextId,
             name: name.trim(),
         });
+
+        await publishDataChange("sellTypes");
 
         return sendSuccessResponse("Sell type created successfully", { sellType });
     } catch (error: any) {

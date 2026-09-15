@@ -12,6 +12,7 @@ import {
 import { HeroSlide, PromoTile, FooterColumn } from './types';
 
 import { ProductDataType, SustainabilityCardProps } from '@/modules/homePage/homePage.types';
+import { CardItem } from '@/modules/newAtJb/newAtJb.types';
 
 
 export const MAX_SIZE_MB = 1.1 * 1024 * 1024;
@@ -141,7 +142,7 @@ export const HOTTEST_DEALS_HERO_SLIDES: HeroSlide[] = [
     textColor: 'text-black',
     badge: 'PERKS EXCLUSIVE'
   },
-    {
+  {
     id: 'slide-4',
     title: 'UP TO $500 OFF OLED TVS',
     subtitle: 'Experience breathtaking picture quality with selected LG, Samsung and Sony OLED TVs.',
@@ -874,5 +875,52 @@ export const COVER_PRODUCTS = [
     salePrice: 589,
     newBadge: true,
     layoutClasses: 'bottom-[10%] right-[2%] w-[48%] h-[22%]',
+  },
+];
+
+export const PROMO_CARDS: CardItem[] = [
+  {
+    id: 1,
+    imageSrc: '/images/bose-promo.jpg',
+    description: 'A refreshed signature look with same great sound!',
+    buttonText: 'Shop now',
+    buttonHref: '#',
+  },
+  {
+    id: 2,
+    imageSrc: '/images/pokemon-tonies.jpg',
+    hasPlayOverlay: true,
+    description: 'A playful new lineup of Pokémon Tonies is here!',
+    buttonText: 'Shop now',
+    buttonHref: '#',
+  },
+  {
+    id: 3,
+    imageSrc: '/images/gta-vi.jpg',
+    description: 'Grand Theft Auto VI - Pre-order now!',
+    buttonText: 'Learn more',
+    buttonHref: '#',
+  },
+  {
+    id: 4,
+    imageSrc: '/images/kodak-camera.jpg',
+    hasPlayOverlay: true,
+    description: 'Let’s Unbox The Kodak Charmera Millennium!',
+    buttonText: 'Shop now',
+    buttonHref: '#',
+  },
+  {
+    id: 5,
+    imageSrc: '/images/remarkable.jpg',
+    description: 'New from reMarkable!',
+    buttonText: 'Shop now',
+    buttonHref: '#',
+  },
+  {
+    id: 6,
+    imageSrc: '/images/laifen-dryer.jpg',
+    description: 'Professional drying for everyday use, everywhere.',
+    buttonText: 'Shop now',
+    buttonHref: '#',
   },
 ];

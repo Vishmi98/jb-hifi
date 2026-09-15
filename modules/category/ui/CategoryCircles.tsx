@@ -8,6 +8,7 @@ import { CategoryCard } from './CategoryCard';
 import { CategorySkeleton } from './CategorySkeleton';
 import { CategoryDataType } from '../category.types';
 import { getCategories } from '../category.service';
+import { subscribeToDataChanges } from '@/lib/realtimeClient';
 
 
 const responsive = {
@@ -77,7 +78,6 @@ export default function CategoryCircles() {
         let isMounted = true;
 
         const fetchCategoriesData = async () => {
-            setIsLoading(true);
             try {
                 const response = await getCategories();
                 if (isMounted && response.success) {
@@ -91,10 +91,15 @@ export default function CategoryCircles() {
             }
         };
 
-        fetchCategoriesData();
+        void fetchCategoriesData();
+
+        const unsubscribe = subscribeToDataChanges('categories', () => {
+            void fetchCategoriesData();
+        });
 
         return () => {
             isMounted = false;
+            unsubscribe();
         };
     }, []);
 

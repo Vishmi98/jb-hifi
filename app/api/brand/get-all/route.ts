@@ -4,6 +4,8 @@ import { NextRequest } from "next/server";
 import "@/models/category.model";
 import "@/models/mainCategory.model";
 import "@/models/subCategory.model";
+import "@/models/leafCategory.model";
+
 import { connectDB } from "@/lib/mongodb";
 import BrandModel from "@/models/brand.model";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
@@ -33,6 +35,18 @@ export async function POST(req: NextRequest) {
                 .populate({
                     path: "collections.subCategoryInfo",
                 })
+                .populate({
+                    path: "categoryInfo",
+                })
+                .populate({
+                    path: "mainCategoryInfo",
+                })
+                .populate({
+                    path: "subCategoryInfo",
+                })
+                .populate({
+                    path: "leafCategoryInfo",
+                })
                 .skip(skip)
                 .limit(limit)
                 .lean();
@@ -56,6 +70,18 @@ export async function POST(req: NextRequest) {
             })
             .populate({
                 path: "collections.subCategoryInfo",
+            })
+            .populate({
+                path: "categoryInfo",
+            })
+            .populate({
+                path: "mainCategoryInfo",
+            })
+            .populate({
+                path: "subCategoryInfo",
+            })
+            .populate({
+                path: "leafCategoryInfo",
             })
             .lean();
 

@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import BannerModel from "@/models/banner.model";
+import { publishDataChange } from "@/services/realtime";
 
 export async function POST(req: NextRequest) {
     try {
@@ -25,6 +26,8 @@ export async function POST(req: NextRequest) {
         if (!bannerCollection) {
             return sendErrorResponse("Banner collection not found", 404);
         }
+
+        await publishDataChange("banners");
 
         return sendSuccessResponse(
             `Banner collection ${Boolean(isPublish) ? "published" : "unpublished"} successfully`,

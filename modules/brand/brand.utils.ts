@@ -37,6 +37,11 @@ export const addBrandInitialValues: BrandDataType = {
     collections: [],
     isFeatured: true,
     isActive: true,
+    haveSinglePage: true,
+    mainCategoryId: undefined,
+    categoryId: undefined,
+    subCategoryId: undefined,
+    leafCategoryId: undefined,
 };
 
 export const addBrandValidationSchema = Yup.object().shape({
@@ -63,4 +68,5 @@ export const addBrandValidationSchema = Yup.object().shape({
         .nullable()
         .transform((value) => (value === "" ? null : value))
         .optional(),
+
 });

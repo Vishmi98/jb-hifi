@@ -193,10 +193,9 @@ body {
   color: #ffffff;
   font-weight: bolder;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
   
   /* 1. Thick Black Text Outline */
-  -webkit-text-stroke: 1px #383838;
+  -webkit-text-stroke: 1px #000;
   
   /* 2. Offset Hard Black Drop Shadow */
   text-shadow: 1px 1px 0px #000000;

@@ -5,6 +5,7 @@ import { connectDB } from "@/lib/mongodb";
 import PaymentMethodModel from "@/models/paymentMethod.model";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import { ImageKitService } from "@/services/imagekit";
+import { publishDataChange } from "@/services/realtime";
 
 export async function POST(req: NextRequest) {
     try {
@@ -64,6 +65,8 @@ export async function POST(req: NextRequest) {
         }
 
         const paymentMethod = await PaymentMethodModel.create(paymentMethodData);
+
+        await publishDataChange("paymentMethods");
 
         return sendSuccessResponse("Payment method created successfully", {
             paymentMethod,

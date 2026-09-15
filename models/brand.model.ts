@@ -22,6 +22,11 @@ export interface IBrand extends Document {
     collections?: ICollection[];
     isFeatured: boolean;
     isActive: boolean;
+    haveSinglePage: boolean;
+    categoryId?: number;
+    mainCategoryId?: number;
+    subCategoryId?: number;
+    leafCategoryId?: number;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -76,10 +81,43 @@ const brandSchema = new Schema<IBrand>(
         videoLink: String,
         collections: [collectionSchema],
         isFeatured: { type: Boolean, default: false },
+        haveSinglePage: { type: Boolean, default: true },
+        categoryId: { type: Number, index: true, default: 0 },
+        mainCategoryId: { type: Number, index: true, default: 0 },
+        subCategoryId: { type: Number, index: true, default: 0 },
+        leafCategoryId: { type: Number, index: true, default: 0 },
         isActive: { type: Boolean, default: true },
     },
     { timestamps: true }
 );
+
+brandSchema.virtual("categoryInfo", {
+    ref: "Category",
+    localField: "categoryId",
+    foreignField: "id",
+    justOne: true,
+});
+
+brandSchema.virtual("mainCategoryInfo", {
+    ref: "MainCategory",
+    localField: "mainCategoryId",
+    foreignField: "id",
+    justOne: true,
+});
+
+brandSchema.virtual("subCategoryInfo", {
+    ref: "SubCategory",
+    localField: "subCategoryId",
+    foreignField: "id",
+    justOne: true,
+});
+
+brandSchema.virtual("leafCategoryInfo", {
+    ref: "LeafCategory",
+    localField: "leafCategoryId",
+    foreignField: "id",
+    justOne: true,
+});
 
 brandSchema.set("toObject", { virtuals: true });
 brandSchema.set("toJSON", { virtuals: true });

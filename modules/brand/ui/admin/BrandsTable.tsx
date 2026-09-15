@@ -7,12 +7,14 @@ import { Edit, Loader2, Plus, Trash, Trash2 } from 'lucide-react';
 import EditBrandModal from './EditBrandModal';
 import { AddBannerModal } from './AddBannerModal';
 import { AddCollectionModal } from './AddCollectionsModal';
-import { BrandDataType } from '../../brand.types';
-import { deleteBrand, deleteBrandCollection, getBrands, publishBrand } from '../../brand.service';
+import { BrandDataType, UpdateBrandRedirectPathPayload } from '../../brand.types';
+import { deleteBrand, deleteBrandCollection, getBrands, publishBrand, updateBrandRedirectPath } from '../../brand.service';
 
 import CommonTable, { ColumnType } from '@/components/CommonTable';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { TableProps } from '@/constants/types';
+import { subscribeToDataChanges } from '@/lib/realtimeClient';
+import { AddRedirectPathModal } from './AddRedirectPathModal';
 
 
 const BrandsTable: React.FC<TableProps> = ({ reload }) => {
@@ -44,40 +46,39 @@ const BrandsTable: React.FC<TableProps> = ({ reload }) => {
         index: number;
     } | null>(null);
     const [isDeleteCollectionModalOpen, setIsDeleteCollectionModalOpen] = useState(false);
+    const [redirectPathTarget, setRedirectPathTarget] = useState<BrandDataType | null>(null);
+    const [isRedirectPathModalOpen, setIsRedirectPathModalOpen] = useState(false);
 
-    const fetchBrands = useCallback(async (currentPage: number) => {
+    const handleAddRedirectPath = (brand: BrandDataType) => {
+        setRedirectPathTarget(brand);
+        setIsRedirectPathModalOpen(true);
+    };
+
+    const fetchData = async (paramPage?: number) => {
         setIsLoading(true);
-
         try {
+            const currentPage = paramPage ?? page;
             const response = await getBrands(currentPage, limit);
 
             if (response.success) {
-                setBrands(response.brands || []);
-                setTotalRows(response.totalBrands || 0);
-                setTotalPages(response.totalPages || 1);
+                setBrands(response.brands);
+                setTotalRows(response.totalBrands);
+                setTotalPages(response.totalPages);
+                setPage(currentPage);
             } else {
                 setBrands([]);
-                setTotalRows(0);
-                setTotalPages(1);
             }
-        } catch (error) {
-            console.error('Failed to fetch brands:', error);
+        } catch {
             setBrands([]);
-            setTotalRows(0);
-            setTotalPages(1);
         } finally {
             setIsLoading(false);
         }
-    }, [limit]);
+    };
 
     useEffect(() => {
-        const loadBrands = async () => {
-            await fetchBrands(page);
-        };
-
-        void loadBrands();
-    }, [reload, page, fetchBrands]);
-
+        fetchData(page);
+    }, [reload, page]);
+    
     const handlePublishToggle = (brand: BrandDataType) => {
         setPublishTarget(brand);
         setIsPublishModalOpen(true);
@@ -95,7 +96,7 @@ const BrandsTable: React.FC<TableProps> = ({ reload }) => {
             const response = await publishBrand(publishTarget.id, !publishTarget.isActive);
 
             if (response.success) {
-                await fetchBrands(page);
+                await fetchData(page);
             }
         } catch (error) {
             console.error('Failed to update brand publish state:', error);
@@ -127,7 +128,7 @@ const BrandsTable: React.FC<TableProps> = ({ reload }) => {
             const response = await deleteBrand(deleteTarget.id);
 
             if (response.success) {
-                await fetchBrands(page);
+                await fetchData(page);
             }
         } catch (error) {
             console.error('Failed to delete brand:', error);
@@ -153,7 +154,7 @@ const BrandsTable: React.FC<TableProps> = ({ reload }) => {
             });
 
             if (res.success) {
-                await fetchBrands(page);
+                await fetchData(page);
             } else {
                 alert(res.message || "Failed to delete collection.");
             }
@@ -207,6 +208,28 @@ const BrandsTable: React.FC<TableProps> = ({ reload }) => {
                     <div className="relative w-9 h-5 bg-gray-200 rounded-full peer-checked:bg-green-500 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:w-4 after:h-4 after:bg-white after:border after:border-gray-300 after:rounded-full after:transition-all peer-checked:after:translate-x-full" />
                 </label>
             ),
+        },
+        {
+            header: "Re direct path",
+            accessor: "",
+            render: (brand) => {
+                const isRedirectDisabled = brand.haveSinglePage; // Enable only when haveSinglePage === false
+
+                return (
+                    <button
+                        onClick={() => handleAddRedirectPath(brand)}
+                        disabled={isRedirectDisabled}
+                        title={
+                            isRedirectDisabled
+                                ? "Redirect path is not applicable for brands with single pages"
+                                : "Add Redirect Path"
+                        }
+                        className="bg-black hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-xs px-2.5 py-1 rounded-md flex items-center gap-1 transition-colors"
+                    >
+                        <Plus size={12} /> Add
+                    </button>
+                );
+            }
         },
         {
             header: "Banners",
@@ -475,7 +498,7 @@ const BrandsTable: React.FC<TableProps> = ({ reload }) => {
                         setIsEditModalOpen(false);
                         setSelectedEditBrand(null);
                     }}
-                    reloadData={() => fetchBrands(page)}
+                    reloadData={() => fetchData(page)}
                     initialValues={selectedEditBrand}
                 />
             )}
@@ -487,7 +510,7 @@ const BrandsTable: React.FC<TableProps> = ({ reload }) => {
                     setBannerTarget(null);
                 }}
                 brand={bannerTarget}
-                reloadData={() => fetchBrands(page)}
+                reloadData={() => fetchData(page)}
             />
 
             <AddCollectionModal
@@ -497,8 +520,27 @@ const BrandsTable: React.FC<TableProps> = ({ reload }) => {
                     setCollectionTarget(null);
                 }}
                 brand={collectionTarget}
-                reloadData={() => fetchBrands(page)}
+                reloadData={() => fetchData(page)}
             />
+
+            {redirectPathTarget && (
+                <AddRedirectPathModal
+                    isOpen={isRedirectPathModalOpen}
+                    onClose={() => {
+                        setIsRedirectPathModalOpen(false);
+                        setRedirectPathTarget(null);
+                    }}
+                    brand={redirectPathTarget}
+                    onSubmit={async (payload: UpdateBrandRedirectPathPayload) => {
+                        const res = await updateBrandRedirectPath(payload);
+                        if (res.success) {
+                            await fetchData(page);
+                        } else {
+                            alert(res.message || "Failed to update redirect path");
+                        }
+                    }}
+                />
+            )}
         </>
     );
 };

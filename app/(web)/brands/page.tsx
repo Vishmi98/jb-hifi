@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import { slugify } from '@/utils/slug';
-import { BrandDataType } from '@/modules/homePage/homePage.types';
-import { getBrands } from '@/modules/homePage/homePage.service';
+import { getBrandHref } from '@/modules/homePage/ui/BestBrandsSection';
+import { BrandDataType } from '@/modules/brand/brand.types';
+import { subscribeToDataChanges } from '@/lib/realtimeClient';
+import { getBrands } from '@/modules/brand/brand.service';
+
 
 // Shimmer blur SVG placeholder generator
 const shimmer = (w: number, h: number) => `
@@ -32,36 +34,43 @@ export default function BrandsPage() {
     const [brands, setBrands] = useState<BrandDataType[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        let isMounted = true;
+    const fetchBrands = useCallback(async (showLoading = false) => {
+        if (showLoading) {
+            setIsLoading(true);
+        }
 
-        const fetchAllBrands = async () => {
-            try {
-                setIsLoading(true);
-                // Request a higher limit to fetch all active brands for A-Z grouping
-                const res = await getBrands();
+        try {
+            const res = await getBrands();
 
-                if (isMounted && res.success) {
-                    const activeBrands = (res.brands || []).filter(
-                        (b) => b.isActive !== false
-                    );
-                    setBrands(activeBrands);
-                }
-            } catch (error) {
-                console.error('Failed to fetch brands page data:', error);
-            } finally {
-                if (isMounted) {
-                    setIsLoading(false);
-                }
+            if (res.success && res.brands) {
+                const activeBrands = res.brands.filter(
+                    (brand) => brand.isActive !== false
+                );
+                setBrands(activeBrands);
             }
-        };
+        } catch (error) {
+            console.error('Failed to fetch brands:', error);
+        } finally {
+            if (showLoading) {
+                setIsLoading(false);
+            }
+        }
+    }, []);
 
-        fetchAllBrands();
+    useEffect(() => {
+        const initialFetchId = window.setTimeout(() => {
+            void fetchBrands(true);
+        }, 0);
+
+        const unsubscribe = subscribeToDataChanges('brands', () => {
+            void fetchBrands();
+        });
 
         return () => {
-            isMounted = false;
+            window.clearTimeout(initialFetchId);
+            unsubscribe();
         };
-    }, []);
+    }, [fetchBrands]);
 
     // Filter top featured brands for logo grid (or fallback to first 15)
     const topBrands = brands.filter((b) => b.isFeatured).slice(0, 15);
@@ -121,7 +130,7 @@ export default function BrandsPage() {
                     ) : (
                         /* Top Brands Logos */
                         featuredLogoList.map((brand, index) => {
-                            const brandHref = `/brands/${brand.slug || slugify(brand.name)}`;
+                            const brandHref = getBrandHref(brand);
                             const logoSrc = brand.logo || '/placeholder-brand.png';
                             const isEager = index < 5;
 
@@ -178,7 +187,8 @@ export default function BrandsPage() {
                                 {groupedBrands[letter]
                                     .sort((a, b) => a.name.localeCompare(b.name))
                                     .map((brand) => {
-                                        const brandHref = `/brands/${brand.slug || slugify(brand.name)}`;
+                                        const brandHref = getBrandHref(brand);
+
                                         return (
                                             <Link
                                                 key={brand.id || brand.id}

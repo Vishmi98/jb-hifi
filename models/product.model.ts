@@ -36,6 +36,7 @@ export interface IProduct extends Document {
     categoryId?: number;
     mainCategoryId?: number;
     subCategoryId?: number;
+    leafCategoryId?: number;
     ratings?: number;
     reviews?: string[];
     

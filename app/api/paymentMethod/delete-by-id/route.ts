@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import PaymentMethodModel from "@/models/paymentMethod.model";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
+import { publishDataChange } from "@/services/realtime";
 
 export async function DELETE(req: NextRequest) {
     try {
@@ -23,6 +24,8 @@ export async function DELETE(req: NextRequest) {
         if (!paymentMethod) {
             return sendErrorResponse("Payment method not found", 404);
         }
+
+        await publishDataChange("paymentMethods");
 
         return sendSuccessResponse("Payment method deleted successfully", {
             paymentMethod,

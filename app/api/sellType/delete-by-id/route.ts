@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import SellTypeModel from "@/models/sellType.model";
+import { publishDataChange } from "@/services/realtime";
 
 export async function DELETE(req: NextRequest) {
     try {
@@ -16,6 +17,8 @@ export async function DELETE(req: NextRequest) {
 
         const deletedSellType = await SellTypeModel.findOneAndDelete({ id: Number(id) });
         if (!deletedSellType) return sendErrorResponse("Sell type not found", 200);
+
+        await publishDataChange("sellTypes");
 
         return sendSuccessResponse("Sell type deleted successfully", { sellType: deletedSellType });
     } catch (error: any) {

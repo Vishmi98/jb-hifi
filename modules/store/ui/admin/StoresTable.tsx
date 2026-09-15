@@ -11,6 +11,7 @@ import CommonTable, { ColumnType } from "@/components/CommonTable";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { deleteStore, getStores, publishStore } from "@/modules/store/store.service";
 import { StoreDataType } from "@/modules/store/store.types";
+import { subscribeToDataChanges } from "@/lib/realtimeClient";
 
 
 const StoresTable: React.FC<TableProps> = ({ reload }) => {
@@ -33,7 +34,11 @@ const StoresTable: React.FC<TableProps> = ({ reload }) => {
 
     const fetchData = useCallback(
         async (paramPage?: number) => {
-            setIsLoading(true);
+            const isBackgroundRefresh = paramPage === undefined;
+
+            if (!isBackgroundRefresh) {
+                setIsLoading(true);
+            }
             try {
                 const currentPage = paramPage ?? page;
                 const response = await getStores(currentPage, limit);
@@ -56,8 +61,22 @@ const StoresTable: React.FC<TableProps> = ({ reload }) => {
     );
 
     useEffect(() => {
-        fetchData(page);
-    }, [reload, page]);
+        const timeoutId = window.setTimeout(() => {
+            void fetchData(page);
+        }, 0);
+
+        return () => window.clearTimeout(timeoutId);
+    }, [fetchData, page, reload]);
+
+    useEffect(() => {
+        const unsubscribe = subscribeToDataChanges("stores", () => {
+            void fetchData();
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, [fetchData]);
 
     const handlePublishToggle = (store: StoreDataType) => {
         setPublishTarget(store);

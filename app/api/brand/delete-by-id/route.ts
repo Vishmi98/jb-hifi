@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import BrandModel from "@/models/brand.model";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
+import { publishDataChange } from "@/services/realtime";
 
 export async function DELETE(req: NextRequest) {
     try {
@@ -21,6 +22,8 @@ export async function DELETE(req: NextRequest) {
         if (!brand) {
             return sendErrorResponse("Brand not found", 200);
         }
+
+        await publishDataChange("brands");
 
         return sendSuccessResponse("Brand deleted successfully", { brand });
     } catch (error: any) {

@@ -5,6 +5,7 @@ import { connectDB } from "@/lib/mongodb";
 import SubCategoryModel from "@/models/subCategory.model";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import { ImageKitService } from "@/services/imagekit";
+import { publishDataChange } from "@/services/realtime";
 
 export async function POST(req: NextRequest) {
     try {
@@ -93,6 +94,8 @@ export async function POST(req: NextRequest) {
             },
             { new: true, runValidators: true }
         );
+
+        await publishDataChange("subCategories");
 
         return sendSuccessResponse("Sub category updated successfully", { subCategory: updatedSubCategory });
     } catch (error: any) {

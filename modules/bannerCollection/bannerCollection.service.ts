@@ -67,7 +67,7 @@ export const publishBannerCollection = async (id: number, isPublish: boolean): P
 export const deleteBannerCollection = async (id: number): Promise<DeleteBannerCollectionResponseDataType> => {
     const response: DeleteBannerCollectionResponseDataType = await apiCall({
         url: `${URL}/banner/delete-by-id`,
-        method: "DELETE",
+        method: "POST",
         body: { id },
     });
 
@@ -114,4 +114,18 @@ export const getBannerByType = async (props: GetBannerByTypePayloadType) => {
             data: null,
         };
     }
+};
+
+export const deleteBannerItem = async (itemId: number, bannerId: number): Promise<DeleteBannerCollectionResponseDataType> => {
+    const response: DeleteBannerCollectionResponseDataType = await apiCall({
+        url: `${URL}/banner/delete-item-by-id`,
+        method: "POST",
+        body: { itemId, bannerId },
+    });
+
+    return {
+        success: response.success,
+        message: response.message,
+        data: response.data,
+    };
 };

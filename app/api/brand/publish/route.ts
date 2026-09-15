@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import BrandModel from "@/models/brand.model";
+import { publishDataChange } from "@/services/realtime";
 
 export async function POST(req: NextRequest) {
     try {
@@ -25,6 +26,8 @@ export async function POST(req: NextRequest) {
         if (!brand) {
             return sendErrorResponse("Brand not found", 200);
         }
+
+        await publishDataChange("brands");
 
         return sendSuccessResponse(
             `Brand ${Boolean(isPublish) ? "published" : "unpublished"} successfully`,

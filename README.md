@@ -16,6 +16,17 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Realtime updates
+
+Configure Pusher with these environment variables before using realtime catalog updates:
+
+```env
+PUSHER_APP_ID=your-app-id
+PUSHER_SECRET=your-app-secret
+NEXT_PUBLIC_PUSHER_KEY=your-public-key
+NEXT_PUBLIC_PUSHER_CLUSTER=your-cluster
+```
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

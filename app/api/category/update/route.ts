@@ -5,6 +5,7 @@ import { connectDB } from "@/lib/mongodb";
 import CategoryModel from "@/models/category.model";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import { ImageKitService } from "@/services/imagekit";
+import { publishDataChange } from "@/services/realtime";
 
 export async function POST(req: NextRequest) {
     try {
@@ -75,6 +76,8 @@ export async function POST(req: NextRequest) {
             },
             { new: true, runValidators: true }
         );
+
+        await publishDataChange("categories");
 
         return sendSuccessResponse("Category Updated Successfully", { category: updatedCategory });
     } catch (error: any) {

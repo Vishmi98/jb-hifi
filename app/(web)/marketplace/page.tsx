@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRight } from 'lucide-react';
+
 import MainCategoryCarousel from '@/modules/category/ui/MainCategoryCarousel';
 import MarketplaceSellers from '@/modules/marketplace/ui/MarketplaceSellers';
 import MarketplaceInfoCards from '@/modules/marketplace/ui/MarketplaceInfoCards';
+
 
 interface MarketplacePageProps {
     // Pass categoryId as a prop if derived from a parent layout/route

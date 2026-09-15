@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { BrandsResponseDataType, BrandsResponseType, PublishBrandResponseDataType, SingleBrandResponseDataType, SingleBrandResponseType } from "./brand.types";
+import { BrandsResponseDataType, BrandsResponseType, PublishBrandResponseDataType, SingleBrandResponseDataType, SingleBrandResponseType, UpdateBrandRedirectPathPayload } from "./brand.types";
 
 import apiCall from "@/services/api.services";
 import { URL } from "@/constants/config";
@@ -191,6 +191,22 @@ export const deleteBrandCollection = async ({
     });
 
     const response = res.data;
+
+    return {
+        success: response.success,
+        message: response.message,
+        data: response.data,
+    };
+};
+
+export const updateBrandRedirectPath = async (payload: UpdateBrandRedirectPathPayload): Promise<PublishBrandResponseDataType> => {
+    const { id, categoryId, mainCategoryId, subCategoryId, leafCategoryId } = payload
+
+    const response: PublishBrandResponseDataType = await apiCall({
+        url: `${URL}/brand/update-redirect-path`,
+        method: "POST",
+        body: { id, categoryId, mainCategoryId, subCategoryId, leafCategoryId },
+    });
 
     return {
         success: response.success,

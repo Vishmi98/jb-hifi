@@ -5,6 +5,7 @@ import { connectDB } from "@/lib/mongodb";
 import LeafCategoryModel from "@/models/leafCategory.model";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import { ImageKitService } from "@/services/imagekit";
+import { publishDataChange } from "@/services/realtime";
 
 export async function POST(req: NextRequest) {
     try {
@@ -102,6 +103,8 @@ export async function POST(req: NextRequest) {
             },
             { new: true, runValidators: true }
         );
+
+        await publishDataChange("leafCategories");
 
         return sendSuccessResponse("Leaf category updated successfully", { leafCategory: updatedLeafCategory });
     } catch (error: any) {

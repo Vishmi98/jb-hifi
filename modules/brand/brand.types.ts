@@ -1,4 +1,5 @@
 import { CategoryDataType } from "../category/category.types";
+import { LeafCategoryDataType } from "../leafCategory/leafCategory.types";
 import { MainCategoryDataType } from "../mainCategory/mainCategory.types";
 import { SubCategoryDataType } from "../subCategory/subCategory.types";
 
@@ -28,6 +29,15 @@ export interface BrandDataType {
     collections?: CollectionDataType[];
     isFeatured: boolean;
     isActive: boolean;
+    haveSinglePage: boolean;
+    categoryId?: number;
+    mainCategoryId?: number;
+    subCategoryId?: number;
+    leafCategoryId?: number;
+    mainCategoryInfo?: MainCategoryDataType;
+    categoryInfo?: CategoryDataType;
+    subCategoryInfo?: SubCategoryDataType;
+    leafCategoryInfo?: LeafCategoryDataType;
 }
 
 export type BrandsResponseDataType = {
@@ -88,4 +98,19 @@ export interface AddBannerModalProps {
     onClose: () => void;
     brand: BrandDataType | null;
     reloadData: () => void;
+}
+
+export interface UpdateBrandRedirectPathPayload {
+    id: number;
+    categoryId?: number;
+    mainCategoryId?: number;
+    subCategoryId?: number;
+    leafCategoryId?: number;
+}
+
+export interface AddRedirectPathModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    brand: BrandDataType;
+    onSubmit: (payload: UpdateBrandRedirectPathPayload) => Promise<void>;
 }

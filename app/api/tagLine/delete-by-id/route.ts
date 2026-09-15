@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import TagLineModel from "@/models/tagLine.model";
+import { publishDataChange } from "@/services/realtime";
 
 export async function DELETE(req: NextRequest) {
     try {
@@ -16,6 +17,8 @@ export async function DELETE(req: NextRequest) {
 
         const deletedTagLine = await TagLineModel.findOneAndDelete({ id: Number(id) });
         if (!deletedTagLine) return sendErrorResponse("Tag line not found", 200);
+
+        await publishDataChange("tagLines");
 
         return sendSuccessResponse("Tag line deleted successfully", { tagLine: deletedTagLine });
     } catch (error: any) {

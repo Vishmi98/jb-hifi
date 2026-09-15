@@ -5,6 +5,7 @@ import { connectDB } from "@/lib/mongodb";
 import MainCategoryModel from "@/models/mainCategory.model";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import { ImageKitService } from "@/services/imagekit";
+import { publishDataChange } from "@/services/realtime";
 
 export async function POST(req: NextRequest) {
   try {
@@ -62,6 +63,8 @@ export async function POST(req: NextRequest) {
       imageId,
       isActive,
     });
+
+    await publishDataChange("mainCategories");
 
     return sendSuccessResponse("Main category created successfully", { mainCategory });
   } catch (error: any) {

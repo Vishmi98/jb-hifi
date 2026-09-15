@@ -4,13 +4,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { Edit, Trash } from "lucide-react";
 
-import { BannerCollectionDataType } from "../../bannerCollection.types";
-import { deleteBannerCollection, getBannerCollections, publishBannerCollection } from "../../bannerCollection.service";
+import { BannerCollectionDataType, BannerItemDataType } from "../../bannerCollection.types";
+import { deleteBannerCollection, deleteBannerItem, getBannerCollections, publishBannerCollection } from "../../bannerCollection.service";
 import AddBannerItemModal from "./AddBannerItemModal";
 
 import { TableProps } from "@/constants/types";
 import CommonTable, { ColumnType } from "@/components/CommonTable";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import { subscribeToDataChanges } from "@/lib/realtimeClient";
 
 
 const BannerCollectionsTable: React.FC<TableProps> = ({ reload }) => {
@@ -29,11 +30,17 @@ const BannerCollectionsTable: React.FC<TableProps> = ({ reload }) => {
     const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
     const [publishTarget, setPublishTarget] = useState<BannerCollectionDataType | null>(null);
     const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+    const [selectedDeleteItem, setSelectedDeleteItem] = useState<{ item: BannerItemDataType; bannerId: number } | null>(null);
+    const [isDeleteItemModalOpen, setIsDeleteItemModalOpen] = useState(false);
 
     const fetchData = useCallback(async (paramPage?: number) => {
-        setIsLoading(true);
+        const isBackgroundRefresh = paramPage === undefined;
+
+        if (!isBackgroundRefresh) {
+            setIsLoading(true);
+        }
         try {
-            const currentPage = paramPage ?? 1;
+            const currentPage = paramPage ?? page;
             const response = await getBannerCollections(currentPage, limit);
 
             if (response.success) {
@@ -49,7 +56,7 @@ const BannerCollectionsTable: React.FC<TableProps> = ({ reload }) => {
         } finally {
             setIsLoading(false);
         }
-    }, [limit]);
+    }, [limit, page]);
 
     useEffect(() => {
         const loadCollections = async () => {
@@ -58,6 +65,14 @@ const BannerCollectionsTable: React.FC<TableProps> = ({ reload }) => {
 
         void loadCollections();
     }, [reload, fetchData]);
+
+    useEffect(() => {
+        const unsubscribe = subscribeToDataChanges("banners", () => {
+            void fetchData();
+        });
+
+        return unsubscribe;
+    }, [fetchData]);
 
     const handleDeleteBannerCollection = (bannerCollection: BannerCollectionDataType) => {
         setSelectedDeleteBannerCollection(bannerCollection);
@@ -72,6 +87,31 @@ const BannerCollectionsTable: React.FC<TableProps> = ({ reload }) => {
     const handlePublishToggle = (bannerCollection: BannerCollectionDataType) => {
         setPublishTarget(bannerCollection);
         setIsPublishModalOpen(true);
+    };
+
+    const handleDeleteBannerItem = (item: BannerItemDataType, bannerId: number) => {
+        setSelectedDeleteItem({ item, bannerId });
+        setIsDeleteItemModalOpen(true);
+    };
+
+    const confirmDeleteBannerItem = async () => {
+        if (!selectedDeleteItem) return;
+
+        try {
+            const response = await deleteBannerItem(
+                selectedDeleteItem.item.id,
+                selectedDeleteItem.bannerId
+            );
+
+            if (response.success) {
+                await fetchData(page);
+            }
+        } catch (error) {
+            console.error("Failed to delete banner item:", error);
+        } finally {
+            setIsDeleteItemModalOpen(false);
+            setSelectedDeleteItem(null);
+        }
     };
 
     const confirmDeleteBannerCollection = async () => {
@@ -186,7 +226,17 @@ const BannerCollectionsTable: React.FC<TableProps> = ({ reload }) => {
                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                             {bannerCollection.items.length > 0 ? (
                                 bannerCollection.items.map((item) => (
-                                    <div key={item.id} className="rounded-lg border border-gray-200 bg-white p-3 shadow-sm">
+                                    <div key={item.id} className="relative rounded-lg border border-gray-200 bg-white p-3 shadow-sm group">
+                                        {/* 4. Trash button overlay for item deletion */}
+                                        <button
+                                            type="button"
+                                            onClick={() => handleDeleteBannerItem(item, bannerCollection.id)}
+                                            className="absolute top-2 right-2 z-10 p-1.5 rounded-full bg-white/90 text-red-500 hover:bg-red-500 hover:text-white transition-colors shadow-sm cursor-pointer"
+                                            title="Delete Item"
+                                        >
+                                            <Trash className="w-3.5 h-3.5" />
+                                        </button>
+
                                         {item.imagePath && (
                                             <div className="relative mb-3 h-32 w-full overflow-hidden rounded-md">
                                                 <Image
@@ -238,6 +288,16 @@ const BannerCollectionsTable: React.FC<TableProps> = ({ reload }) => {
                 }}
                 onConfirm={confirmDeleteBannerCollection}
                 message={`Are you sure you want to delete ${selectedDeleteBannerCollection?.bannerType || "this banner collection"}?`}
+            />
+
+            <ConfirmModal
+                isOpen={isDeleteItemModalOpen}
+                onClose={() => {
+                    setIsDeleteItemModalOpen(false);
+                    setSelectedDeleteItem(null);
+                }}
+                onConfirm={confirmDeleteBannerItem}
+                message="Are you sure you want to delete this banner item?"
             />
 
             {selectedAddItemBannerCollection && (

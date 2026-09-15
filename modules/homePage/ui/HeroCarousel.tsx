@@ -8,6 +8,7 @@ import 'react-multi-carousel/lib/styles.css';
 
 import { BannerItemDataType } from '@/modules/bannerCollection/bannerCollection.types';
 import { getBannerByType } from '@/modules/bannerCollection/bannerCollection.service';
+import { subscribeToDataChanges } from '@/lib/realtimeClient';
 
 
 const responsive = {
@@ -68,9 +69,11 @@ export default function HeroCarousel() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let isInitial = true;
+
     const fetchBanners = async () => {
-      setIsLoading(true);
       try {
+        if (isInitial) setIsLoading(true);
         const res = await getBannerByType({ bannerType: 'home' });
 
         if (res.success && res.data?.items && Array.isArray(res.data.items)) {
@@ -79,14 +82,24 @@ export default function HeroCarousel() {
           setSlides([]);
         }
       } catch (error) {
-        console.error('Failed to fetch banners:', error);
         setSlides([]);
       } finally {
-        setIsLoading(false);
+        if (isInitial) {
+          setIsLoading(false);
+          isInitial = false;
+        }
       }
     };
 
-    fetchBanners();
+    void fetchBanners();
+
+    const unsubscribe = subscribeToDataChanges('bannerItems', () => {
+      void fetchBanners();
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const getSlideLink = (slide: BannerItemDataType): string | null => {

@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import BannerModel from "@/models/banner.model";
+import { publishDataChange } from "@/services/realtime";
 
 export async function POST(req: NextRequest) {
     try {
@@ -23,6 +24,8 @@ export async function POST(req: NextRequest) {
             id: nextId,
             bannerType: bannerType.trim(),
         });
+
+        await publishDataChange("banners");
 
         return sendSuccessResponse("Banner collection created successfully", { banner });
     } catch (error: any) {

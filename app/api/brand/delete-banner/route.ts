@@ -6,6 +6,7 @@ import { connectDB } from "@/lib/mongodb";
 import BrandModel from "@/models/brand.model";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import { ImageKitService } from "@/services/imagekit";
+import { publishDataChange } from "@/services/realtime";
 
 
 export async function POST(req: NextRequest) {
@@ -68,6 +69,8 @@ export async function POST(req: NextRequest) {
         }
 
         await brand.save();
+
+        await publishDataChange("brandBanners");
 
         return sendSuccessResponse("Banner image deleted successfully", {
             bannerImages: brand.bannerImages,

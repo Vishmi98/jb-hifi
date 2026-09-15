@@ -5,6 +5,7 @@ import { connectDB } from "@/lib/mongodb";
 import StoreModel from "@/models/store.model";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import { ImageKitService } from "@/services/imagekit";
+import { publishDataChange } from "@/services/realtime";
 
 const parseCategories = (value: FormDataEntryValue | null): number[] => {
     const raw = typeof value === "string" ? value.trim() : "";
@@ -158,6 +159,8 @@ export async function POST(req: NextRequest) {
             },
             { new: true, runValidators: true }
         );
+
+        await publishDataChange("stores");
 
         return sendSuccessResponse("Store updated successfully", { store: updatedStore });
     } catch (error: any) {

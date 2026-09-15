@@ -101,7 +101,7 @@ export default function TvsSmashed() {
                         draggable={true}
                         swipeable={true}
                         className="w-full py-2"
-                        itemClass="px-2"
+                        itemClass="pr-2"
                     >
                         {TVS_PRODUCTS.map((prod) => (
                             <div key={prod.id}>

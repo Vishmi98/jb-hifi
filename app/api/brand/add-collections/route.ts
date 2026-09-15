@@ -6,6 +6,7 @@ import { connectDB } from "@/lib/mongodb";
 import BrandModel, { ICollection } from "@/models/brand.model";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import { ImageKitService } from "@/services/imagekit";
+import { publishDataChange } from "@/services/realtime";
 
 
 export async function POST(req: NextRequest) {
@@ -82,6 +83,8 @@ export async function POST(req: NextRequest) {
 
         brand.collections = formattedCollections;
         await brand.save();
+
+        await publishDataChange("brandCollections");
 
         return sendSuccessResponse("Collections updated successfully", {
             collections: brand.collections,

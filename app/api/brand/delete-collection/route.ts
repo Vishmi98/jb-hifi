@@ -6,6 +6,7 @@ import { connectDB } from "@/lib/mongodb";
 import BrandModel, { ICollection } from "@/models/brand.model";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import { ImageKitService } from "@/services/imagekit";
+import { publishDataChange } from "@/services/realtime";
 
 
 export async function POST(req: NextRequest) {
@@ -64,6 +65,8 @@ export async function POST(req: NextRequest) {
         // Remove collection item
         brand.collections.splice(targetIndex, 1);
         await brand.save();
+
+        await publishDataChange("brandCollections");
 
         return sendSuccessResponse("Collection deleted successfully", {
             collections: brand.collections,

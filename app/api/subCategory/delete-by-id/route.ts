@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import SubCategoryModel from "@/models/subCategory.model";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
+import { publishDataChange } from "@/services/realtime";
 
 export async function DELETE(req: NextRequest) {
     try {
@@ -21,6 +22,8 @@ export async function DELETE(req: NextRequest) {
         if (!subCategory) {
             return sendErrorResponse("Sub category not found", 404);
         }
+
+        await publishDataChange("subCategories");
 
         return sendSuccessResponse("Sub category deleted successfully", { subCategory });
     } catch (error: any) {

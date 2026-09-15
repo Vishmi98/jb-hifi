@@ -1,41 +1,50 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 
 import { getStores } from '@/modules/store/store.service';
 import { StoreDataType } from '@/modules/store/store.types';
 import { slugify } from '@/utils/slug';
+import { subscribeToDataChanges } from '@/lib/realtimeClient';
 
 
 export default function MarketplaceSellers() {
     const [stores, setStores] = useState<StoreDataType[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    useEffect(() => {
-        let isMounted = true;
-
-        const fetchAllStores = async () => {
+    const fetchAllStores = useCallback(async (showLoading = false) => {
+        if (showLoading) {
             setIsLoading(true);
-            try {
-                // Fetch with a large limit to grab all sellers for alphabetical display
-                const res = await getStores(1, 500);
-                if (isMounted && res.success && res.stores) {
-                    setStores(res.stores);
-                }
-            } catch (error) {
-                console.error('Failed to fetch marketplace sellers:', error);
-            } finally {
-                if (isMounted) setIsLoading(false);
-            }
-        };
+        }
 
-        void fetchAllStores();
+        try {
+            const res = await getStores(1, 500);
+            if (res.success && res.stores) {
+                setStores(res.stores);
+            }
+        } catch (error) {
+            console.error('Failed to fetch marketplace sellers:', error);
+        } finally {
+            if (showLoading) {
+                setIsLoading(false);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        const initialFetchId = window.setTimeout(() => {
+            void fetchAllStores(true);
+        }, 0);
+        const unsubscribe = subscribeToDataChanges('stores', () => {
+            void fetchAllStores();
+        });
 
         return () => {
-            isMounted = false;
+            window.clearTimeout(initialFetchId);
+            unsubscribe();
         };
-    }, []);
+    }, [fetchAllStores]);
 
     // Group stores by their first letter (A-Z) sorted alphabetically
     const groupedStores = useMemo(() => {

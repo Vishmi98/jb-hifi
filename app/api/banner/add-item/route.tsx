@@ -6,6 +6,7 @@ import { connectDB } from "@/lib/mongodb";
 import BannerModel, { IItem } from "@/models/banner.model";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import { ImageKitService } from "@/services/imagekit";
+import { publishDataChange } from "@/services/realtime";
 
 export async function POST(req: NextRequest) {
     try {
@@ -69,6 +70,8 @@ export async function POST(req: NextRequest) {
         // 7. Update document and save
         banner.items.push(newItem);
         await banner.save();
+
+        await publishDataChange("bannerItems");
 
         return sendSuccessResponse("Banner item added successfully", {
             banner,

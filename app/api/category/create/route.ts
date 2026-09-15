@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { ImageKitService } from "@/services/imagekit";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
+import { publishDataChange } from "@/services/realtime";
 import CategoryModel from "@/models/category.model";
 
 export async function POST(req: NextRequest) {
@@ -61,6 +62,8 @@ export async function POST(req: NextRequest) {
       imageId,
       isActive,
     });
+
+    await publishDataChange("categories");
 
     return sendSuccessResponse("Category Created Successfully", { category });
   } catch (error: any) {

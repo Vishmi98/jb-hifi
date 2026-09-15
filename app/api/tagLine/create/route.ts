@@ -4,6 +4,7 @@ import { NextRequest } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import TagLineModel from "@/models/tagLine.model";
+import { publishDataChange } from "@/services/realtime";
 
 export async function POST(req: NextRequest) {
     try {
@@ -23,6 +24,8 @@ export async function POST(req: NextRequest) {
             id: nextId,
             name: name.trim(),
         });
+
+        await publishDataChange("tagLines");
 
         return sendSuccessResponse("Tag line created successfully", { tagLine });
     } catch (error: any) {

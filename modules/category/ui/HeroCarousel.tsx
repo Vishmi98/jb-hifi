@@ -9,6 +9,7 @@ import { HeroCarouselProps } from '../category.types';
 
 import { BannerItemDataType } from '@/modules/bannerCollection/bannerCollection.types';
 import { getBannerByType } from '@/modules/bannerCollection/bannerCollection.service';
+import { subscribeToDataChanges } from '@/lib/realtimeClient';
 
 
 export default function HeroCarousel({
@@ -25,9 +26,11 @@ export default function HeroCarousel({
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let isInitial = true;
+
     const fetchBanner = async () => {
       try {
-        setIsLoading(true);
+        if (isInitial) setIsLoading(true);
         const response = await getBannerByType({
           bannerType,
           categoryId,
@@ -46,14 +49,24 @@ export default function HeroCarousel({
           setSlides([]);
         }
       } catch (error) {
-        // Silently clear slides on API failure to prevent component display
         setSlides([]);
       } finally {
-        setIsLoading(false);
+        if (isInitial) {
+          setIsLoading(false);
+          isInitial = false;
+        }
       }
     };
 
-    fetchBanner();
+    void fetchBanner();
+
+    const unsubscribe = subscribeToDataChanges('bannerItems', () => {
+      void fetchBanner();
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, [bannerType, categoryId, mainCategoryId, subCategoryId, leafCategoryId, brandId, productId]);
 
   // Auto-slide effect
@@ -195,8 +208,8 @@ export default function HeroCarousel({
                 onClick={() => setCurrent(index)}
                 aria-label={`Go to slide ${index + 1}`}
                 className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${current === index
-                    ? 'w-12 bg-black'
-                    : 'w-12 bg-black/20 hover:bg-black/40'
+                  ? 'w-12 bg-black'
+                  : 'w-12 bg-black/20 hover:bg-black/40'
                   }`}
               />
             ))}
