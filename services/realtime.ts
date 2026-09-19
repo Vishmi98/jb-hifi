@@ -13,7 +13,9 @@ const pusher = process.env.PUSHER_APP_ID
     })
     : null;
 
-export const publishDataChange = async (resource: "stores" | "categories" | "mainCategories" | "subCategories" | "leafCategories" | "brands" | "brandBanners" | "brandCollections" | "banners" | "bannerItems" | "paymentMethods" | "sellTypes" | "tagLines") => {
+export const publishDataChange = async (
+    resource: "stores" | "categories" | "mainCategories" | "subCategories" | "leafCategories" | "brands" | "brandBanners" | "brandCollections" | "banners" | "bannerItems" | "paymentMethods" | "sellTypes" | "tagLines" | "products"
+) => {
     if (!pusher) {
         console.warn("Pusher is not configured; realtime updates are disabled.");
         return;

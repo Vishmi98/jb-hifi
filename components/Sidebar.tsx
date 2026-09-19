@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Award, FolderTree, GitCommit, Images, Layers, LogOut, Store, Tag } from 'lucide-react';
+import { Award, FolderTree, GitCommit, Images, Layers, LogOut, Package, Store, Tag } from 'lucide-react';
 import Image from 'next/image';
 
 import { handleCleanCookie } from '@/utils/cookie.util';
@@ -21,6 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
     { id: 'brands', label: "Brands", href: '/admin/brands', icon: <Award className="h-4 w-4 mr-2" /> },
     { id: 'stores', label: "Stores", href: '/admin/stores', icon: <Store className="h-4 w-4 mr-2" /> },
     { id: 'bannerCollection', label: "Banner Collection", href: '/admin/bannerCollection', icon: <Images className="h-4 w-4 mr-2" /> },
+    { id: 'products', label: "Products", href: '/admin/products', icon: <Package className="h-4 w-4 mr-2" /> },
   ];
 
   const handleLogOut = () => {

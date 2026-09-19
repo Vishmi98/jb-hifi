@@ -6,6 +6,7 @@ import { Edit, Loader2, Plus, Trash, Trash2 } from 'lucide-react';
 
 import EditBrandModal from './EditBrandModal';
 import { AddBannerModal } from './AddBannerModal';
+import { AddRedirectPathModal } from './AddRedirectPathModal';
 import { AddCollectionModal } from './AddCollectionsModal';
 import { BrandDataType, UpdateBrandRedirectPathPayload } from '../../brand.types';
 import { deleteBrand, deleteBrandCollection, getBrands, publishBrand, updateBrandRedirectPath } from '../../brand.service';
@@ -13,8 +14,6 @@ import { deleteBrand, deleteBrandCollection, getBrands, publishBrand, updateBran
 import CommonTable, { ColumnType } from '@/components/CommonTable';
 import { ConfirmModal } from '@/components/ConfirmModal';
 import { TableProps } from '@/constants/types';
-import { subscribeToDataChanges } from '@/lib/realtimeClient';
-import { AddRedirectPathModal } from './AddRedirectPathModal';
 
 
 const BrandsTable: React.FC<TableProps> = ({ reload }) => {
