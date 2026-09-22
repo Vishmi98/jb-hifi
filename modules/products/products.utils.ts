@@ -2,6 +2,8 @@ import * as Yup from "yup";
 
 import {
     AddProductFormValues,
+    DescriptionDataType,
+    FeatureDataType,
     ProductSpecificationDataType,
     ProductVariantDataType,
 } from "./products.types";
@@ -44,10 +46,6 @@ export const productVariantInitialValues: ProductVariantDataType = {
 };
 
 export const productVariantValidationSchema = Yup.object().shape({
-    id: Yup.number()
-        .integer("ID must be an integer")
-        .optional(),
-
     productModel: Yup.string()
         .trim()
         .optional(),
@@ -147,4 +145,45 @@ export const addFullProductValidationSchema = Yup.object().shape({
         .min(1, "Select at least one payment method"),
 
     tags: Yup.array().of(Yup.string()).optional(),
+});
+
+
+// ==========================================
+// Product Description Utilities
+// ==========================================
+
+export const featureInitialValues: FeatureDataType = {
+    title: "",
+    description: "",
+};
+
+export const featureValidationSchema = Yup.object().shape({
+    title: Yup.string()
+        .trim()
+        .required("Feature title is required"),
+    description: Yup.string()
+        .trim()
+        .required("Feature description is required"),
+});
+
+export const addProductDescriptionInitialValues: DescriptionDataType = {
+    paragraph1: "",
+    paragraph2: "",
+    paragraph3: "",
+    features: [],
+    videoUrl: "",
+};
+
+export const addProductDescriptionValidationSchema = Yup.object().shape({
+    paragraph1: Yup.string().trim().optional(),
+    paragraph2: Yup.string().trim().optional(),
+    paragraph3: Yup.string().trim().optional(),
+    videoUrl: Yup.string()
+        .trim()
+        .url("Must be a valid URL")
+        .optional()
+        .nullable(),
+    features: Yup.array()
+        .of(featureValidationSchema)
+        .default([]),
 });

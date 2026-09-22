@@ -6,11 +6,10 @@ import { X, Loader2, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { toast, ToastContainer } from "react-toastify";
 
-import { AddSpecificationModalProps, ProductVariantDataType } from "../../products.types";
-import { addProductVariants } from "../../products.service";
+import { EditProductVariantModalProps, ProductVariantDataType } from "../../products.types";
+import { updateProductVariant } from "../../products.service";
 import {
     productSpecificationInitialValues,
-    productVariantInitialValues,
     productVariantValidationSchema,
 } from "../../products.utils";
 
@@ -18,12 +17,7 @@ import ImageCropper from "@/components/ImageCropper";
 import { MAX_SIZE_MB } from "@/constants/data";
 
 
-export const AddProductVariantModal: React.FC<AddSpecificationModalProps> = ({
-    isOpen,
-    onClose,
-    product,
-    reloadData,
-}) => {
+export const EditProductVariantModal: React.FC<EditProductVariantModalProps> = ({ isOpen, onClose, initialValues, reloadData, product }) => {
     // Media States
     const [image, setImage] = useState<File | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -61,11 +55,19 @@ export const AddProductVariantModal: React.FC<AddSpecificationModalProps> = ({
             setSubmitting: (isSubmitting: boolean) => void;
         }
     ) => {
+        if (!initialValues?.id) {
+            toast.error("Invalid variant data.");
+            return;
+        }
+
         try {
             setIsLoading(true);
 
             const formData = new FormData();
-            formData.append("productId", String(product?.id ?? ""));
+            formData.append("variantId", String(initialValues.id));
+            if (product?.id) {
+                formData.append("productId", String(product.id));
+            }
             formData.append("productModel", values.productModel);
             formData.append("sku", values.sku);
             formData.append("price", String(values.price));
@@ -76,18 +78,17 @@ export const AddProductVariantModal: React.FC<AddSpecificationModalProps> = ({
             formData.append("colorHexCode", values.colorHexCode);
 
             // Pass specifications array as serialized JSON string
-            formData.append("specifications", JSON.stringify(values.specifications));
+            formData.append("specifications", JSON.stringify(values.specifications || []));
 
             if (image) {
-                // Match backend expectation: variantImage_0 or variantImages
-                formData.append("variantImage_0", image);
+                formData.append("variantImage", image);
             }
 
-            // Replace with your actual API action endpoint
-            const response = await addProductVariants(formData);
+            // Call API update action endpoint
+            const response = await updateProductVariant(formData);
 
             if (response?.success) {
-                toast.success(response.message || "Variant added successfully!");
+                toast.success(response.message || "Variant updated successfully!");
                 resetForm();
                 setImage(null);
                 setTimeout(() => {
@@ -95,10 +96,10 @@ export const AddProductVariantModal: React.FC<AddSpecificationModalProps> = ({
                     reloadData();
                 }, 300);
             } else {
-                toast.error(response?.message || "Failed to add variant.");
+                toast.error(response?.message || "Failed to update variant.");
             }
         } catch (error) {
-            toast.error("An error occurred while adding the product variant.");
+            toast.error("An error occurred while updating the product variant.");
             console.error("Submission Error: ", error);
         } finally {
             setSubmitting(false);
@@ -106,7 +107,7 @@ export const AddProductVariantModal: React.FC<AddSpecificationModalProps> = ({
         }
     };
 
-    if (!isOpen) return null;
+    if (!isOpen || !initialValues) return null;
 
     return (
         <div
@@ -120,7 +121,7 @@ export const AddProductVariantModal: React.FC<AddSpecificationModalProps> = ({
                 {/* Header */}
                 <div className="flex justify-between items-center p-4 border-b">
                     <div>
-                        <h2 className="font-semibold text-lg">Add Product Variant</h2>
+                        <h2 className="font-semibold text-lg">Update Product Variant</h2>
                         {product?.title && (
                             <p className="text-xs text-gray-500 font-medium truncate max-w-md">
                                 Target Product: {product?.title}
@@ -134,7 +135,7 @@ export const AddProductVariantModal: React.FC<AddSpecificationModalProps> = ({
                 </div>
 
                 <Formik
-                    initialValues={productVariantInitialValues}
+                    initialValues={initialValues}
                     validationSchema={productVariantValidationSchema}
                     onSubmit={handleSubmit}
                 >
@@ -329,16 +330,23 @@ export const AddProductVariantModal: React.FC<AddSpecificationModalProps> = ({
                                         onChange={handleImageChange}
                                         className="block w-full text-xs text-gray-900 file:mr-4 file:py-1 file:px-3 file:rounded-md file:border file:text-xs file:font-semibold file:bg-gray-50 hover:file:bg-gray-100 file:border-gray-200 cursor-pointer"
                                     />
-                                    {image && (
-                                        <div className="mt-2 relative w-28 h-28 border rounded overflow-hidden">
-                                            <Image
-                                                src={URL.createObjectURL(image)}
-                                                alt="Variant Image Preview"
-                                                fill
-                                                className="object-cover"
-                                            />
-                                        </div>
-                                    )}
+                                    {image ? (
+                                        <Image
+                                            src={URL.createObjectURL(image)}
+                                            alt="Thumbnail Preview"
+                                            width={150}
+                                            height={150}
+                                            className="mt-2"
+                                        />
+                                    ) : initialValues.imagePath ? (
+                                        <Image
+                                            src={initialValues.imagePath}
+                                            alt="Thumbnail Preview"
+                                            width={150}
+                                            height={150}
+                                            className="mt-2"
+                                        />
+                                    ) : null}
                                 </label>
                             </div>
 
@@ -371,7 +379,7 @@ export const AddProductVariantModal: React.FC<AddSpecificationModalProps> = ({
                                     {(isLoading || isSubmitting) && (
                                         <Loader2 className="w-4 h-4 animate-spin" />
                                     )}
-                                    {isLoading || isSubmitting ? "Adding..." : "Add Variant"}
+                                    {isLoading || isSubmitting ? "Updating..." : "Update"}
                                 </button>
                             </div>
                         </Form>

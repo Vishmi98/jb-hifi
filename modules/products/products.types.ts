@@ -274,3 +274,87 @@ export interface AddProductVariantModalProps {
     productTitle?: string;
     handleReload: () => void;
 }
+
+export type EditProductVariantModalProps = {
+    isOpen: boolean;
+    onClose: () => void;
+    reloadData: () => void;
+    initialValues: ProductVariantDataType | null;
+    product?: ProductDataType | null; // Accept null here
+};
+
+export type EditDescriptionModalProps = {
+    isOpen: boolean;
+    onClose: () => void;
+    reloadData: () => void;
+    initialValues: DescriptionDataType | null;
+    product?: ProductDataType | null;
+};
+
+export type ProductDetailsProps = {
+    product: ProductDataType;
+};
+
+export type ProductResponseType = {
+    success: boolean;
+    message: string;
+    data?: {
+        product: ProductDataType;
+        selectedVariant?: ProductVariantDataType | null;
+    };
+}
+
+export type ProductResponseDataType = {
+    success: boolean;
+    message: string;
+    data: {
+        product: ProductDataType;
+        selectedVariant?: ProductVariantDataType | null;
+    };
+}
+
+export interface ProductOverviewProps {
+    product: ProductDataType;
+    initialVariant?: ProductVariantDataType | null;
+    currentSlug: string;
+}
+
+export interface ProductCardProps {
+    prod: ProductDataType;
+    variant?: ProductVariantDataType;
+}
+
+export interface BreadcrumbsProps {
+    product: ProductOverviewProps['product'];
+    currentStorage?: string;
+    currentColor?: string;
+}
+
+export interface ProductLeftSectionProps {
+    product: ProductOverviewProps['product'];
+    selectedImage: string;
+    setSelectedImage: (img: string) => void;
+    currentColor: string;
+    currentStorage: string;
+    selectedVariant: ProductVariantDataType | null;
+    uniqueColorVariants: ProductVariantDataType[];
+    uniqueStorageVariants: ProductVariantDataType[];
+    handleColorSelect: (color: string) => void;
+    handleStorageSelect: (storage: string) => void;
+}
+
+export interface ProductRightSectionProps {
+    product: ProductOverviewProps['product'];
+    selectedVariant: ProductVariantDataType | null;
+    currentColor: string;
+    currentStorage: string;
+    uniqueColorVariants: ProductVariantDataType[];
+    uniqueStorageVariants: ProductVariantDataType[];
+    handleColorSelect: (color: string) => void;
+    handleStorageSelect: (storage: string) => void;
+}
+
+export interface ProductAccordionSectionProps {
+    product: ProductDataType;
+    selectedVariant: ProductVariantDataType | null;
+}

@@ -86,7 +86,7 @@ const specificationSchema = new Schema<IProductSpecification>(
 
 const variantSchema = new Schema<IProductVariant>(
     {
-        id: { type: Number, required: true, unique: true, index: true },
+        id: { type: Number, required: true },
         productModel: { type: String, trim: true, default: "" },
         sku: { type: String, trim: true, default: "" },
         price: { type: Number, required: true, min: 0 },

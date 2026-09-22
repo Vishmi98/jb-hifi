@@ -95,8 +95,8 @@ export default function SubCategoryCarousel({ mainCategoryId }: SubCategoryCarou
 
     if (isLoading) {
         return (
-            <div className="w-full my-6 flex justify-center items-center py-4">
-                <CategorySkeleton count={6} />
+            <div className="w-full my-6 flex justify-start items-center py-4">
+                <CategorySkeleton count={8} />
             </div>
         );
     }

@@ -14,6 +14,13 @@ export async function POST(req: NextRequest) {
     try {
         await connectDB();
 
+        // Safe cleanup for legacy unique index on nested array elements
+        try {
+            await ProductModel.collection.dropIndex("variants.id_1");
+        } catch {
+            // Index already dropped or doesn't exist
+        }
+
         const formData = await req.formData();
 
         // 1. Retrieve product identifier
@@ -31,7 +38,9 @@ export async function POST(req: NextRequest) {
             return sendErrorResponse("Product not found", 404);
         }
 
-        const currentVariantCount = product.variants?.length || 0;
+        const currentVariants = product.variants || [];
+        const currentVariantCount = currentVariants.length;
+
         if (currentVariantCount >= MAX_VARIANTS_COUNT) {
             return sendErrorResponse(
                 `Product already reached the maximum limit of ${MAX_VARIANTS_COUNT} variants`,
@@ -76,11 +85,14 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // Determine starting ID for new variants
-        let highestVariantId = 0;
-        if (product.variants && product.variants.length > 0) {
-            highestVariantId = Math.max(...product.variants.map((v) => v.id || 0));
-        }
+        // Track used IDs dynamically across existing and newly assigned variants
+        const usedIds = new Set<number>(
+            currentVariants
+                .map((v: any) => parseNumber(v.id, NaN))
+                .filter((id: number) => !isNaN(id))
+        );
+
+        let currentMaxId = usedIds.size > 0 ? Math.max(...Array.from(usedIds)) : 0;
 
         // 4. Process images & map strict typed variants
         const variantImageFiles = formData.getAll("variantImages") as File[];
@@ -111,11 +123,16 @@ export async function POST(req: NextRequest) {
                 const parsedOriginalPrice = parseNumber(variant.originalPrice, parsedPrice);
                 const parsedAdditionalPrice = parseNumber(variant.additionalPrice, 0);
 
-                // Auto-generate numeric ID for schema compliance
-                const variantId = variant.id ? parseNumber(variant.id, highestVariantId + idx + 1) : highestVariantId + idx + 1;
+                // Safely assign unique variant ID scoped to this product
+                let assignedId = parseNumber(variant.id, NaN);
+                if (isNaN(assignedId) || usedIds.has(assignedId)) {
+                    currentMaxId += 1;
+                    assignedId = currentMaxId;
+                }
+                usedIds.add(assignedId);
 
                 return {
-                    id: variantId,
+                    id: assignedId,
                     productModel: String(variant.productModel || "").trim(),
                     sku: String(variant.sku || "").trim(),
                     price: parsedPrice,
@@ -127,7 +144,7 @@ export async function POST(req: NextRequest) {
                     specifications: Array.isArray(variant.specifications) ? variant.specifications : [],
                     imagePath,
                     imagePathId,
-                };
+                } as IProductVariant;
             })
         );
 
@@ -139,7 +156,7 @@ export async function POST(req: NextRequest) {
                     variants: { $each: newVariants },
                 },
             },
-            { new: true, runValidators: true }
+            { returnDocument: "after", runValidators: true }
         );
 
         await publishDataChange("products");

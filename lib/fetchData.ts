@@ -6,11 +6,18 @@ import { getLeafCategoryBySlug } from "@/modules/leafCategory/leafCategory.servi
 import { LeafCategoryDataType } from "@/modules/leafCategory/leafCategory.types";
 import { getMainCategoryBySlug } from "@/modules/mainCategory/mainCategory.service";
 import { MainCategoryDataType } from "@/modules/mainCategory/mainCategory.types";
+import { getProductBySlug } from "@/modules/products/products.service";
+import { ProductDataType, ProductVariantDataType } from "@/modules/products/products.types";
 import { getStoreBySlug } from "@/modules/store/store.service";
 import { StoreDataType } from "@/modules/store/store.types";
 import { getSubCategoryBySlug } from "@/modules/subCategory/subCategory.service";
 import { SubCategoryDataType } from "@/modules/subCategory/subCategory.types";
 
+
+export interface FetchProductResult {
+    product: ProductDataType;
+    selectedVariant: ProductVariantDataType | null;
+}
 
 export async function fetchCategory(slug: string): Promise<CategoryDataType | null> {
     try {
@@ -86,6 +93,26 @@ export async function fetchSeller(slug: string): Promise<StoreDataType | null> {
         return res.store;
     } catch (error) {
         console.error("Error fetching store data:", error);
+        return null;
+    }
+}
+
+export async function fetchProduct(
+    slug: string
+): Promise<FetchProductResult | null> {
+    try {
+        const res = await getProductBySlug({ slug });
+
+        if (!res.success || !res.data || !res.data.product) {
+            return null;
+        }
+
+        return {
+            product: res.data.product,
+            selectedVariant: res.data.selectedVariant || null,
+        };
+    } catch (error) {
+        console.error("Error fetching product data:", error);
         return null;
     }
 }

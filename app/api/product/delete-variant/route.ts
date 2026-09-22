@@ -8,7 +8,7 @@ import { sendErrorResponse, sendSuccessResponse } from "@/services/apiResponse";
 import { publishDataChange } from "@/services/realtime";
 import { parseNumber } from "@/utils/api.utils";
 
-export async function DELETE(req: NextRequest) {
+export async function POST(req: NextRequest) {
     try {
         await connectDB();
 

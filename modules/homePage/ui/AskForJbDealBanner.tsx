@@ -52,7 +52,6 @@ export default function AskForJbDealBanner() {
                         5am – 4pm (GMT+5:30)
                     </span>
                 </div>
-
             </div>
         </section>
     );

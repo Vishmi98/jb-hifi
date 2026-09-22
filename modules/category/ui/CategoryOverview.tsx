@@ -3,9 +3,10 @@ import Link from 'next/link';
 
 import HeroCarousel from './HeroCarousel';
 import MainCategoryCarousel from './MainCategoryCarousel';
+import FeaturedProductsSection from './FeaturedProductsSection';
 import { CategoryDetailsProps } from '../category.types';
 
-import { COLLECTION_PRODUCTS, FEATURED_PRODUCTS } from '@/constants/data';
+import { COLLECTION_PRODUCTS } from '@/constants/data';
 import ProductCard from '@/modules/homePage/ui/ProductCard';
 import ProductFilters from '@/modules/collections/ui/ProductFilters';
 
@@ -45,26 +46,7 @@ const CategoryOverview = ({ category }: CategoryDetailsProps) => {
             <MainCategoryCarousel categoryId={id} />
 
             {/* Featured Products Section */}
-            <section className="my-12">
-                <h2 className="jb-callout-logo text-xl md:text-2xl font-bold mb-3">
-                    Featured
-                </h2>
-
-                {/* Flex container with explicit items-stretch for uniform height */}
-                <div
-                    className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 justify-items-center"
-                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                >
-                    {FEATURED_PRODUCTS.map((prod) => (
-                        <ProductCard
-                            key={prod.id}
-                            prod={prod}
-                        />
-                    ))}
-                </div>
-
-            </section>
-
+            <FeaturedProductsSection categoryId={id} />
 
             <section className="my-8">
                 {/* Filters & Sorting Toolbar */}

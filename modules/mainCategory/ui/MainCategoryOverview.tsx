@@ -8,6 +8,7 @@ import HeroCarousel from '@/modules/collections/ui/HeroCarousel';
 import { COLLECTION_PRODUCTS, FEATURED_PRODUCTS } from '@/constants/data';
 import ProductCard from '@/modules/homePage/ui/ProductCard';
 import ProductFilters from '@/modules/collections/ui/ProductFilters';
+import FeaturedProductsSection from './FeaturedProductsSection';
 
 
 const MainCategoryOverview = ({ mainCategory }: MainCategoryDetailsProps) => {
@@ -17,17 +18,17 @@ const MainCategoryOverview = ({ mainCategory }: MainCategoryDetailsProps) => {
         mainSlug,
         imagePath,
         description,
-        categoryInfo
+        categoryInfo,
     } = mainCategory;
 
     return (
         <div className="min-h-screen w-[95%] md:w-[90%] mx-auto text-black">
             {/* Breadcrumb Navigation */}
             <div className="my-10">
-                <div className="text-xs sm:text-sm text-gray-600 flex items-center gap-2">
+                <div className="text-sm text-gray-600 flex items-center gap-1.5 flex-wrap">
                     <Link href="/" className="hover:underline">Home</Link>
                     <span>/</span>
-                    <span className="font-semibold text-gray-600">{categoryInfo?.name}</span>
+                    <Link href={`/collections/${categoryInfo?.slug}`}>{categoryInfo?.name}</Link>
                     <span>/</span>
                     <span className="font-semibold text-gray-600">{name}</span>
                 </div>
@@ -47,27 +48,7 @@ const MainCategoryOverview = ({ mainCategory }: MainCategoryDetailsProps) => {
 
             <SubCategoryCarousel mainCategoryId={id} />
 
-            {/* Featured Products Section */}
-            <section className="my-12">
-                <h2 className="jb-callout-logo text-xl md:text-2xl font-bold mb-3">
-                    Featured
-                </h2>
-
-                {/* Flex container with explicit items-stretch for uniform height */}
-                <div
-                    className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 justify-items-center"
-                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                >
-                    {FEATURED_PRODUCTS.map((prod) => (
-                        <ProductCard
-                            key={prod.id}
-                            prod={prod}
-                        />
-                    ))}
-                </div>
-
-            </section>
-
+            <FeaturedProductsSection mainCategoryId={id} />
 
             <section className="my-8">
                 {/* Filters & Sorting Toolbar */}

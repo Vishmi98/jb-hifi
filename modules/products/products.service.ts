@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { PaymentMethodsResponseDataType, PaymentMethodsResponseType, ProductsResponseDataType, ProductsResponseType, PublishProductResponseDataType, SellTypesResponseDataType, SellTypesResponseType, SingleProductResponseDataType, SingleProductResponseType, TagLinesResponseDataType, TagLinesResponseType } from "./products.types";
+import { PaymentMethodsResponseDataType, PaymentMethodsResponseType, ProductResponseDataType, ProductResponseType, ProductsResponseDataType, ProductsResponseType, PublishProductResponseDataType, SellTypesResponseDataType, SellTypesResponseType, SingleProductResponseDataType, SingleProductResponseType, TagLinesResponseDataType, TagLinesResponseType } from "./products.types";
 
 import apiCall from "@/services/api.services";
 import { URL } from "@/constants/config";
@@ -29,10 +29,106 @@ export const getProducts = async (
     };
 };
 
-export const getProductBySlug = async (props: { slug: string }): Promise<SingleProductResponseType> => {
+export const getProductsByCategory = async (
+    page?: number,
+    limit?: number,
+    categoryId?: number
+): Promise<ProductsResponseDataType> => {
+    const response: ProductsResponseType = await apiCall({
+        url: `${URL}/product/get-by-category`,
+        method: "POST",
+        body: { page, limit: limit || 5, categoryId },
+    });
+
+    const data = response.data || {};
+
+    return {
+        success: response.success ?? false,
+        message: response.message || "No message provided",
+        products: data.products || [],
+        page: data.page ?? 1,
+        limit: data.limit ?? 5,
+        totalPages: data.totalPages ?? 0,
+        totalProducts: data.totalProducts ?? 0,
+    };
+};
+
+export const getProductsByMainCategory = async (
+    page?: number,
+    limit?: number,
+    mainCategoryId?: number
+): Promise<ProductsResponseDataType> => {
+    const response: ProductsResponseType = await apiCall({
+        url: `${URL}/product/get-by-mainCategory`,
+        method: "POST",
+        body: { page, limit: limit || 5, mainCategoryId },
+    });
+
+    const data = response.data || {};
+
+    return {
+        success: response.success ?? false,
+        message: response.message || "No message provided",
+        products: data.products || [],
+        page: data.page ?? 1,
+        limit: data.limit ?? 5,
+        totalPages: data.totalPages ?? 0,
+        totalProducts: data.totalProducts ?? 0,
+    };
+};
+
+export const getProductsBySubCategory = async (
+    page?: number,
+    limit?: number,
+    subCategoryId?: number
+): Promise<ProductsResponseDataType> => {
+    const response: ProductsResponseType = await apiCall({
+        url: `${URL}/product/get-by-subCategory`,
+        method: "POST",
+        body: { page, limit: limit || 5, subCategoryId },
+    });
+
+    const data = response.data || {};
+
+    return {
+        success: response.success ?? false,
+        message: response.message || "No message provided",
+        products: data.products || [],
+        page: data.page ?? 1,
+        limit: data.limit ?? 5,
+        totalPages: data.totalPages ?? 0,
+        totalProducts: data.totalProducts ?? 0,
+    };
+};
+
+export const getProductsByLeafCategory = async (
+    page?: number,
+    limit?: number,
+    leafCategoryId?: number
+): Promise<ProductsResponseDataType> => {
+    const response: ProductsResponseType = await apiCall({
+        url: `${URL}/product/get-by-leafCategory`,
+        method: "POST",
+        body: { page, limit: limit || 5, leafCategoryId },
+    });
+
+    const data = response.data || {};
+
+    return {
+        success: response.success ?? false,
+        message: response.message || "No message provided",
+        products: data.products || [],
+        page: data.page ?? 1,
+        limit: data.limit ?? 5,
+        totalPages: data.totalPages ?? 0,
+        totalProducts: data.totalProducts ?? 0,
+    };
+};
+
+export const getProductBySlug = async (props: { slug: string }): Promise<ProductResponseType> => {
     const { slug } = props;
 
-    const response: SingleProductResponseDataType = await apiCall({
+    const response: ProductResponseDataType = await apiCall({
         url: `${URL}/product/get-by-slug`,
         method: 'POST',
         body: { slug },
@@ -41,7 +137,7 @@ export const getProductBySlug = async (props: { slug: string }): Promise<SingleP
     return ({
         success: response.success,
         message: response.message,
-        product: response.data.product
+        data: response.data,
     });
 };
 
@@ -293,3 +389,34 @@ export const getTagLines = async (
         totalTagLines: data.totalTagLines ?? 0,
     };
 };
+
+export const addDescription = async (data: FormData) => {
+    const res = await axios.post(`${URL}/product/add-description`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    const response = res.data;
+
+    return {
+        success: response.success,
+        message: response.message,
+        data: response.data,
+    };
+};
+
+export const updateDescription = async (data: FormData) => {
+    const res = await axios.post(`${URL}/product/update-description`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    const response = res.data;
+
+    return {
+        success: response.success,
+        message: response.message,
+        data: {
+            product: response.data,
+        },
+    };
+};
+
